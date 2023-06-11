@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import json
 
 app = Flask(__name__)
@@ -7,8 +7,8 @@ app = Flask(__name__)
 @app.route('/test')
 def welcome():
     test = "true"
-    res = json.dumps(test)
-    return res
+    return jsonify({'bool': test})
+
 
 if __name__ == '__main__':
     app.run()
