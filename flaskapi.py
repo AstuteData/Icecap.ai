@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify
 app = Flask(__name__)
 
 
-@app.route('/test', methods=[GET, POST])
+@app.route('/test')
 def welcome():
     data = {'message': 'Complete'}
     return jsonify(data)
