@@ -4,11 +4,11 @@ import json
 app = Flask(__name__)
 
 
-@app.route('/test')
+@app.route('/test', methods=[GET, POST])
 def welcome():
-    test = "true"
-    return jsonify({'bool': test})
+    data = {'message': 'Complete'}
+    return jsonify(data)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
