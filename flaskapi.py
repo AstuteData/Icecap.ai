@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
+import companyResearch
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -8,7 +9,8 @@ cors = CORS(app)
 @app.route('/test', methods=['GET'])
 def welcome():
     if request.method == "GET":
-        return {'message': 'Complete',
+        companyResearch.upload_list()
+        return {'message': 'Research complete',
                 'method': request.method
                 }
 
