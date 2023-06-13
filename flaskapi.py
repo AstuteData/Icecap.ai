@@ -11,8 +11,8 @@ def welcome():
                 }
 
 
-@app.route('/test2', methods=['GET'])
-def welcome():
+@app.route('/tester', methods=['GET'])
+def two():
     if request.method == "GET":
         return {'message': 'Alana',
                 'method': request.method
