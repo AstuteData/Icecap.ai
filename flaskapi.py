@@ -11,5 +11,13 @@ def welcome():
                 }
 
 
+@app.route('/test2', methods=['GET'])
+def welcome():
+    if request.method == "GET":
+        return {'message': 'Alana',
+                'method': request.method
+                }
+
+
 if __name__ == '__main__':
     app.run()
