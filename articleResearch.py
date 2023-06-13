@@ -3,6 +3,7 @@ from newspaper import Article
 import pandas as pd
 import openai
 from sqlalchemy import create_engine, text
+import psycopg2
 
 conn = None
 cur = None
