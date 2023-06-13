@@ -1,12 +1,14 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
 
-@app.route('/test')
+@app.route('/test', methods=['GET'])
 def welcome():
-    data = {'message': 'Complete'}
-    return jsonify(data)
+    if request.method == "GET":
+        return {'message': 'Complete',
+                'method': request.method
+                }
 
 
 if __name__ == '__main__':
