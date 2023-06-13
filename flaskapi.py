@@ -7,7 +7,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route('/test', methods=['GET'])
-@cross_origin()
 def welcome():
     if request.method == "GET":
         return {'message': 'Complete',
@@ -16,7 +15,6 @@ def welcome():
 
 
 @app.route('/tester', methods=['GET'])
-@cross_origin()
 def two():
     if request.method == "GET":
         return {'message': 'Alana',
