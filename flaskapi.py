@@ -28,8 +28,7 @@ def two():
 def runDBCheck():
     if request.method == "GET":
         test = checkDatabase.check_database()
-        return {'message': True,
-                'method': request.method}
+        return {True}
 
 
 if __name__ == '__main__':
