@@ -25,9 +25,9 @@ def two():
 
 
 @app.route('/checkdatabase', methods=['GET'])
-def runDBCheck():
+def rundbcheck():
     if request.method == "GET":
-        return {'true'}
+        return 'true'
 
 
 if __name__ == '__main__':
