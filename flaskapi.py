@@ -1,12 +1,13 @@
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
 import companyResearch
+import checkDatabase
 
 app = Flask(__name__)
 cors = CORS(app)
 
 
-@app.route('/test', methods=['GET'])
+@app.route('/beginresearch', methods=['GET'])
 def welcome():
     if request.method == "GET":
         companyResearch.upload_list()
@@ -21,6 +22,14 @@ def two():
         return {'message': 'Alana',
                 'method': request.method
                 }
+
+
+@app.route('/checkdatabase', methods=['GET'])
+def runDBCheck():
+    if request.method == "GET":
+        test = checkDatabase.check_database()
+        return {'message': test,
+                'method': request.method}
 
 
 if __name__ == '__main__':
