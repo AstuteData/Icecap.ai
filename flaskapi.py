@@ -27,7 +27,18 @@ def two():
 @app.route('/checkdatabase', methods=['GET'])
 def rundbcheck():
     if request.method == "GET":
-        return 'true'
+        response = checkDatabase.check_database()
+        if response == True:
+            return 'true'
+        elif response == False:
+            return 'false'
+
+
+@app.route('/researchimport', methods=['GET', 'POST'])
+def csvimport():
+    if request.method == "POST":
+        rq = request.get_json()
+        companyResearch.upload_list(rq)
 
 
 if __name__ == '__main__':
