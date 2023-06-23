@@ -9,10 +9,9 @@ engine = create_engine(
     'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def upload_list(testone, testtwo):
-    t1 = pd.read_json(testone)
-    t2 = pd.read_json(testtwo)
-    df = pd.concat([t1, t2], axis=1, join='inner')
+def upload_list(rq):
+    df = pd.read_json(rq)
+    df.to_csv('writetest.csv', sep='\t', encoding='utf-8', index=False)
 
     for ind in df.index:
         linkedinLink = (df['LinkedIn URL'][ind])
