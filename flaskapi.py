@@ -34,11 +34,11 @@ def rundbcheck():
             return 'false'
 
 
-@app.route('/researchimport', methods=['GET', 'POST'])
+@app.route('/researchimport', methods=['POST'])
 def csvimport():
-    if request.method == "POST":
-        rq = request.get_json()
-        companyResearch.upload_list(rq)
+    rq = request.get_json()
+    companyResearch.upload_list(rq)
+    return "complete"
 
 
 if __name__ == '__main__':
