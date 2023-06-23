@@ -10,7 +10,8 @@ engine = create_engine(
 
 
 def upload_list(rq):
-    df = pd.read_json(rq)
+    reff = pd.json_normalize(rq)
+    df = pd.DataFrame(data=reff)
 
     for ind in df.index:
         linkedinLink = (df['LinkedIn URL'][ind])

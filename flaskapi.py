@@ -37,7 +37,8 @@ def rundbcheck():
 @app.route('/researchimport', methods=['POST'])
 def csvimport():
     rq = request.get_json()
-    return rq
+    companyResearch.upload_list(rq)
+    return "complete"
 
 
 if __name__ == '__main__':
