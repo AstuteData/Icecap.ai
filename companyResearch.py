@@ -10,7 +10,9 @@ engine = create_engine(
 
 
 def upload_list(testone, testtwo):
-    df = pd.read_json(testone)
+    t1 = pd.read_json(testone)
+    t2 = pd.read_json(testtwo)
+    df = pd.concat([t1, t2], axis=1, join='inner')
 
     for ind in df.index:
         linkedinLink = (df['LinkedIn URL'][ind])
