@@ -11,7 +11,6 @@ engine = create_engine(
 
 def upload_list(rq):
     df = pd.read_json(rq)
-    df.to_csv('writetest.csv', sep='\t', encoding='utf-8', index=False)
 
     for ind in df.index:
         linkedinLink = (df['LinkedIn URL'][ind])
