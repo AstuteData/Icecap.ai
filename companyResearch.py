@@ -50,12 +50,15 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
             conn.close()
 
     else:
-        r = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={linkedinLink}",
-                                headers={'Authorization': 'basic EvGVkI4x'})
-        rp = r.json()
-        keys = ['domainName', 'domain', 'domainTld', 'description', 'industryMain', 'monthlyVisitors', 'revenue', 'totalEmployees', 'yearFounded']
-        r_filtered = {x: rp[x] for x in keys}
-        df = pd.DataFrame.from_dict([r_filtered])
-        df['UniqueID'] = uniqueID
-        df['originalCompanyName'] = currentCompany
-        df.to_sql(f'CompanyData', con=engine, if_exists='append')
+        try:
+            r = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={linkedinLink}",
+                                    headers={'Authorization': 'basic EvGVkI4x'})
+            rp = r.json()
+            keys = ['domainName', 'domain', 'domainTld', 'description', 'industryMain', 'monthlyVisitors', 'revenue', 'totalEmployees', 'yearFounded']
+            r_filtered = {x: rp[x] for x in keys}
+            df = pd.DataFrame.from_dict([r_filtered])
+            df['UniqueID'] = uniqueID
+            df['originalCompanyName'] = currentCompany
+            df.to_sql(f'CompanyData', con=engine, if_exists='append')
+        except:
+            pass
