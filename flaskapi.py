@@ -45,9 +45,8 @@ def csvimport():
 @app.route('/companylist', methods=['GET'])
 def retrievecompanylist():
     response = loadCompanies.load_database()
-    data = response.json()
-
-    return data
+    return {'ListData': response,
+            'method': response.method}
 
 
 if __name__ == '__main__':
