@@ -14,6 +14,6 @@ def load_database():
         df = df.drop(columns='index')
         conn.close()
 
-    jsonlist = df.to_json()
+    jsonlist = df.to_json(orient='records')
     return jsonlist
 
