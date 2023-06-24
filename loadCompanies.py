@@ -15,6 +15,5 @@ def load_database():
         conn.close()
 
     jsonlist = df.to_json()
-    parsedlist = json.loads(jsonlist)
-    return parsedlist
+    return jsonlist
 
