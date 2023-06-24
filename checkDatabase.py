@@ -17,7 +17,6 @@ def check_database():
             df = pd.read_sql_query(select, conn)
             df = df.drop(columns='index')
             conn.close()
-            print(df)
 
             for index, row in df.iterrows():
                 if row['UniquePersonID'] == '1234':

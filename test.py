@@ -8,4 +8,7 @@ a = [{"Company Name":"4Com","LinkedIn URL":"https://www.linkedin.com/company/785
 reff = pd.json_normalize(a)
 df = pd.DataFrame(data=reff)
 
-print(df)
+df1 = df.to_json()
+parseddf = json.loads(df1)
+
+print(parseddf)

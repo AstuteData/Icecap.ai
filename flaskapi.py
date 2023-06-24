@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
 import companyResearch
 import checkDatabase
+import loadCompanies
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -39,6 +40,12 @@ def csvimport():
     rq = request.get_json()
     companyResearch.upload_list(rq)
     return "complete"
+
+
+@app.route('/companylist', methods=['GET'])
+def retrievecompanylist():
+    response = loadCompanies.load_database()
+    return response
 
 
 if __name__ == '__main__':
