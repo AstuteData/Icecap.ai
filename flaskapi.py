@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 import companyResearch
 import checkDatabase
 import loadCompanies
+import articleResearch
 import json
 
 app = Flask(__name__)
@@ -11,7 +12,9 @@ cors = CORS(app)
 
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
-
+    jsonstring = request.get_json()
+    articleResearch.prep_article_data(jsonstring)
+    return "complete"
 
 
 
