@@ -9,13 +9,10 @@ app = Flask(__name__)
 cors = CORS(app)
 
 
-@app.route('/beginresearch', methods=['GET'])
+@app.route('/beginresearch', methods=['POST'])
 def welcome():
-    if request.method == "GET":
-        companyResearch.upload_list()
-        return {'message': 'Research complete',
-                'method': request.method
-                }
+
+
 
 
 @app.route('/tester', methods=['GET'])

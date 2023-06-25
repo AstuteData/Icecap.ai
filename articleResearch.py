@@ -7,10 +7,23 @@ import psycopg2
 
 conn = None
 cur = None
-
-def article_search(currentCompanyDomain, currentCompany, uniqueID):
-    engine = create_engine(
+engine = create_engine(
         'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
+
+
+def prep_article_data(jsonstring):
+    df = pd.json_normalize(jsonstring, max_level=0)
+    print(df)
+
+    for ind in df.index:
+        currentCompany = (df['originalCompanyName'][ind])
+        currentCompanyDomain = (df['domain'][ind])
+        uniqueID = (df['UniqueID'][ind])
+
+        article_search(currentCompany, currentCompanyDomain, uniqueID)
+
+
+def article_search(currentCompany, currentCompanyDomain, uniqueID):
 
     print("Article search")
     params = {
