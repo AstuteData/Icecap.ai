@@ -5,10 +5,13 @@ import checkDatabase
 import loadCompanies
 import articleResearch
 import json
+import requests
+from redis import Redis
+from rq import Queue, Retry
 
 app = Flask(__name__)
 cors = CORS(app)
-
+q = Queue(connection=Redis())
 
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
@@ -38,8 +41,8 @@ def rundbcheck():
 
 @app.route('/researchimport', methods=['POST'])
 def csvimport():
-    rq = request.get_json()
-    companyResearch.upload_list(rq)
+    importrequest = request.get_json()
+    q.enqueue(companyResearch.upload_list(importrequest), retry=Retry(max=3))
     return "complete"
 
 
