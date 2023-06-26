@@ -1,3 +1,4 @@
+import redis
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
 import companyResearch
@@ -12,6 +13,8 @@ from rq import Queue, Retry
 app = Flask(__name__)
 cors = CORS(app)
 q = Queue(connection=Redis())
+pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
+redis = redis.Redis(connection_pool=pool)
 
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
