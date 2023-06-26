@@ -19,7 +19,7 @@ redis = redis.Redis(connection_pool=pool)
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
     jsonstring = request.get_json()
-    articleResearch.prep_article_data(jsonstring)
+    q.enqueue(articleResearch.prep_article_data(jsonstring), retry=Retry(max=3))
     return "complete"
 
 
@@ -45,7 +45,7 @@ def rundbcheck():
 @app.route('/researchimport', methods=['POST'])
 def csvimport():
     importrequest = request.get_json()
-    q.enqueue(companyResearch.upload_list(importrequest), retry=Retry(max=3))
+    companyResearch.upload_list(importrequest)
     return "complete"
 
 
