@@ -1,4 +1,6 @@
-import redis
+import os
+import threading
+import logging
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
 import companyResearch
@@ -7,21 +9,27 @@ import loadCompanies
 import articleResearch
 import json
 import requests
-from redis import Redis
-from rq import Queue, Retry
 
 app = Flask(__name__)
 cors = CORS(app)
-q = Queue(connection=Redis())
-pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
-redis = redis.Redis(connection_pool=pool)
+
+
+class MyWorker():
+    def __init__(self, message):
+        self.message = message
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True
+        thread.start()
+
+    def run(self):
+        logging.info(f'run MyWorker with parameter {self.message}')
+
 
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
     jsonstring = request.get_json()
-    q.enqueue(articleResearch.prep_article_data(jsonstring), retry=Retry(max=3))
+    MyWorker(articleResearch.prep_article_data(jsonstring))
     return "complete"
-
 
 
 @app.route('/tester', methods=['GET'])
