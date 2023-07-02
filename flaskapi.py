@@ -21,7 +21,6 @@ def welcome():
     task.researchworker.delay(jsonstring)
 
 
-
 @app.route('/tester', methods=['GET'])
 def two():
     if request.method == "GET":
