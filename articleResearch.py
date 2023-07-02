@@ -3,7 +3,6 @@ from newspaper import Article
 import pandas as pd
 import openai
 from sqlalchemy import create_engine, text
-import psycopg2
 
 conn = None
 cur = None
@@ -101,6 +100,8 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     df1 = df1.transpose()
     df1['CompanyName'] = currentCompany
     df1['UniqueID'] = uniqueID
+    print("t")
+    print(df1)
 
     articlePrompt = "Summarize this article in 5 bullet points: "
     articleCount = 0
