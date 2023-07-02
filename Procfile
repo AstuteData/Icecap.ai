@@ -1,2 +1,2 @@
 web: gunicorn flaskapi:app
-worker: celery worker --app=tasks.app
+worker: celery worker task:app
