@@ -1,2 +1,2 @@
 web: gunicorn flaskapi:app
-worker: celery -A task worker -l info -B
+worker: celery -A tasks worker -l info -B

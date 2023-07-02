@@ -1,5 +1,4 @@
 import celery
-import os
 import articleResearch
 
 app = celery.Celery('example')
