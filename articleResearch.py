@@ -8,7 +8,7 @@ import psycopg2
 conn = None
 cur = None
 engine = create_engine(
-        'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
+    'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
 def prep_article_data(jsonstring):
@@ -111,6 +111,10 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     for ind in df1.index:
         currentArticleText = (df1['Text'][ind])
         articleCount = articleCount + 1
+        print("------")
+        print("summarising")
+        print(articleCount)
+        print("------")
 
         openai.api_key = "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"
         modelEngine = "text-davinci-003"
@@ -124,7 +128,6 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             top_p=1,
             frequency_penalty=0.0,
             presence_penalty=0.5,
-            stop=[" Human:", " AI:"]
         )
 
         response = completion.choices[0].text
@@ -136,4 +139,5 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             print("Process finished")
 
         elif (articleCount != df1.index.size):
+            print("next article")
             continue
