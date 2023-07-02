@@ -8,28 +8,18 @@ import checkDatabase
 import loadCompanies
 import articleResearch
 import json
+import task
 import requests
 
 app = Flask(__name__)
 cors = CORS(app)
 
 
-class MyWorker():
-    def __init__(self, message):
-        self.message = message
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True
-        thread.start()
-
-    def run(self):
-        logging.info(f'run MyWorker with parameter {self.message}')
-
-
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
     jsonstring = request.get_json()
-    MyWorker(articleResearch.prep_article_data(jsonstring))
-    return "complete"
+    task.researchworker.delay(jsonstring)
+
 
 
 @app.route('/tester', methods=['GET'])
