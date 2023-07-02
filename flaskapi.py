@@ -9,7 +9,9 @@ import loadCompanies
 import articleResearch
 import json
 import tasks
+import nltk
 import requests
+nltk.download('punkt')
 
 app = Flask(__name__)
 cors = CORS(app)
