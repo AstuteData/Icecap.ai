@@ -40,7 +40,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
       'time_period_min': '01-01-2020',
       'time_period_max': '05-21-2023',
       'output': 'json',
-      'num': '10'
+      'num': '2'
     }
 
     # Returning links from Google News based on the company domain.
@@ -133,11 +133,11 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         response = completion.choices[0].text
         summarizedArticles.append(response)
 
-        if (articleCount == df1.index.size):
+        if articleCount == df1.index.size:
             df1['AiSummary'] = summarizedArticles
             df1.to_sql(f'ArticleData', con=engine, if_exists='append')
             print("Process finished")
 
-        elif (articleCount != df1.index.size):
+        elif articleCount != df1.index.size:
             print("next article")
             continue
