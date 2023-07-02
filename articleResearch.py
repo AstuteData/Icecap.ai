@@ -58,13 +58,13 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
 
     for row in df.itertuples():
         allArticleLinks.append(row.link)
+        print(allArticleLinks)
 
     for url in allArticleLinks:
         try:
             article = Article(url)
             article.download()
             article.parse()
-            article.nlp()
 
             goodArticleLinks.append(url)
 

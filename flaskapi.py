@@ -6,7 +6,6 @@ from flask_cors import CORS, cross_origin
 import companyResearch
 import checkDatabase
 import loadCompanies
-import articleResearch
 import json
 import tasks
 import nltk
