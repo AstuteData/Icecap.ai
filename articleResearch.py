@@ -96,17 +96,18 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             'Text': texts,
             }
 
+    print(data)
+
     df1 = pd.DataFrame.from_dict(data, orient='index')
     df1 = df1.transpose()
     df1['CompanyName'] = currentCompany
     df1['UniqueID'] = uniqueID
-    print("t")
-    print(df1)
 
     articlePrompt = "Summarize this article in 5 bullet points: "
     articleCount = 0
     summarizedArticles = []
 
+    print(df1)
     print(f"Summarising {currentCompany}'s articles")
 
     for ind in df1.index:
