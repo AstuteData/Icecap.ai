@@ -8,7 +8,7 @@ import checkDatabase
 import loadCompanies
 import articleResearch
 import json
-import task
+import tasks
 import requests
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ cors = CORS(app)
 @app.route('/beginresearch', methods=['POST'])
 def welcome():
     jsonstring = request.get_json()
-    task.researchworker.delay(jsonstring)
+    tasks.researchworker.delay(jsonstring)
 
 
 @app.route('/tester', methods=['GET'])
