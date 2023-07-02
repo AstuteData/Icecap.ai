@@ -39,7 +39,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
       'time_period_min': '01-01-2020',
       'time_period_max': '05-21-2023',
       'output': 'json',
-      'num': '2'
+      'num': '10'
     }
 
     # Returning links from Google News based on the company domain.
