@@ -19,6 +19,7 @@ cors = CORS(app)
 def welcome():
     jsonstring = request.get_json()
     tasks.researchworker.delay(jsonstring)
+    return "Sent to worker"
 
 
 @app.route('/tester', methods=['GET'])
