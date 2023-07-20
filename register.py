@@ -1,3 +1,4 @@
+import pandas
 import pandas as pd
 from sqlalchemy import create_engine, text
 import uniqueIDfunc
@@ -13,11 +14,27 @@ email = "jack@whitehouse.co.uk"
 password = "password1234!"
 company = "Rivery"
 
+userDataJson = {"email": "jack@whitehouse.co.uk",
+                "password": "password1234!",
+                "company": "Rivery"}
 
 def register():
     userID = uniqueIDfunc.uniqueID()
-    userEmail = email
-    userPassword = password
-    userCompany = company
 
+    response_df = pandas.DataFrame.from_dict([userDataJson])
+
+    print(response_df)
+
+
+
+
+
+
+
+
+
+
+
+
+register()
 

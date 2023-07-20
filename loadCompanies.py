@@ -16,4 +16,3 @@ def load_database():
 
     jsonlist = df.to_json(orient='records')
     return jsonlist
-
