@@ -7,6 +7,7 @@ import companyResearch
 import checkDatabase
 import loadCompanies
 import json
+import returnList
 import tasks
 import nltk
 import requests
@@ -51,6 +52,13 @@ def csvimport():
 @app.route('/companylist', methods=['GET'])
 def retrievecompanylist():
     response = loadCompanies.load_database()
+    y = json.loads(response)
+    return y
+
+
+@app.route('/enrichedcompanylist', methods=['GET'])
+def retrieveenrichedlist():
+    response = returnList.load_database()
     y = json.loads(response)
     return y
 
