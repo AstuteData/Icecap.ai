@@ -21,7 +21,7 @@ def prep_article_data(jsonstring):
         currentCompanyDomain = (df['domain'][ind])
         uniqueID = (df['UniqueID'][ind])
 
-        article_search(researchedCompanies, currentCompany, currentCompanyDomain, uniqueID)
+        article_search(currentCompany, currentCompanyDomain, uniqueID)
 def article_search(currentCompany, currentCompanyDomain, uniqueID):
 
     researchedCompanies.append(currentCompany)
