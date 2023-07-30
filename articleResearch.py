@@ -78,9 +78,9 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             summary = summary.replace('\n',' ')
             summaries.append(summary)
 
-            text = article.text
-            text = text.replace('\n',' ')
-            texts.append(text)
+            arttext = article.text
+            arttext = arttext.replace('\n',' ')
+            texts.append(arttext)
 
             author = article.authors
             author = author.replace('\n', ' ')
