@@ -11,11 +11,9 @@ def uniqueID():
     uniqueId = uniqueId.replace(":", "")
     uniqueId = uniqueId.replace(".", "")
     uniqueId = uniqueId+randomString
-    return(uniqueId)
+    return uniqueId
 
 def uniqueCompanyID():
-    randomStringGen = str(random.random())
-    randomString = randomStringGen.replace(".", "")
     uniqueIdGen = str(datetime.datetime.now())
     uniqueId = uniqueIdGen.replace("-", "")
     uniqueId = uniqueId.replace(" ", "")
@@ -26,7 +24,6 @@ def uniqueCompanyID():
         CharGen = str(random.choice(string.ascii_letters))
         uniqueChar = uniqueChar + CharGen
         print(uniqueChar)
-    companyID = uniqueChar +uniqueNumber
+    companyID = (uniqueChar + uniqueNumber)
     print(companyID)
-
-uniqueCompanyID()
+    return companyID

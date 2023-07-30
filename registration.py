@@ -13,6 +13,7 @@ engine = create_engine(
 def registeruser(registeruserdata):
     NewUserDf = pd.json_normalize(registeruserdata, max_level=0)
     currentEmail = (NewUserDf['EmailAddress'][0])
+    print(currentEmail)
 
     try:
         with engine.connect() as conn:
@@ -21,20 +22,27 @@ def registeruser(registeruserdata):
             PostgresUserDf = PostgresUserDf.drop(columns='index')
 
         ExistingEmailCheck = currentEmail in PostgresUserDf['Email Address'].values
+        print(ExistingEmailCheck)
     except:
         ExistingEmailCheck = False
+        print(ExistingEmailCheck)
 
     if ExistingEmailCheck:
+        print("Error - email exists")
         return("ErrorExistingEmail")
     else:
         userID = uniqueIDfunc.uniqueID()
         companyID = uniqueIDfunc.uniqueCompanyID()
+        print(userID)
+        print(companyID)
 
         try:
             NewUserDf['UserID'] = userID
             NewUserDf['CompanyID'] = companyID
             NewUserDf.to_sql(f'UserData', con=engine, if_exists='append')
             conn.close()
+            print("Registration success")
             return("RegistrationSuccessful")
         except:
+            print("Registration Error")
             return("RegistrationError")
