@@ -20,7 +20,7 @@ def registeruser(registeruserdata):
             select = text('SELECT * FROM "UserData"')
             PostgresUserDf = pd.read_sql_query(select, conn)
             PostgresUserDf = PostgresUserDf.drop(columns='index')
-            ExistingEmailCheck = currentEmail in PostgresUserDf['Email Address'].values
+            ExistingEmailCheck = currentEmail in PostgresUserDf['EmailAddress'].values
             print(ExistingEmailCheck)
     except:
         ExistingEmailCheck = False
