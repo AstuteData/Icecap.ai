@@ -26,7 +26,7 @@ def loginauth(loginuserdata):
         ExistingEmailCheck = False
 
     if ExistingEmailCheck:
-        emailPosition = PostgresUserDf.loc[PostgresUserDf.isin(currentEmail).any(axis=1)].index.tolist()
+        emailPosition = PostgresUserDf.loc[PostgresUserDf.isin([currentEmail]).any(axis=1)].index.tolist()
         emailPosition = emailPosition[0]
         existingEmail = (PostgresUserDf['EmailAddress'][emailPosition])
         existingPassword = (PostgresUserDf['Password'][emailPosition])
