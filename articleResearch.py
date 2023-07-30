@@ -143,15 +143,10 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
                 PostgresCompanyDf = pd.read_sql_query(select, conn)
                 PostgresCompanyDf = PostgresCompanyDf.drop(columns='index')
 
-            researchedCompaniesLen = len(researchedCompanies)
 
-            for i in range(researchedCompaniesLen):
-                locateIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin([researchedCompanies[i]]).any(axis=1)].index
-                researchedCompaniesIndex.append(locateIndex)
-
-            for j in range(researchedCompaniesLen):
-                currentIndex = researchedCompaniesIndex[j]
-                PostgresCompanyDf.at[currentIndex, 'ResearchStatus'] = 'ResearchComplete'
+            currentIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin(currentCompany).any(axis=1)].index
+            print(currentIndex)
+            PostgresCompanyDf.at[currentIndex, 'ResearchStatus'] = 'ResearchComplete'
 
             df1['AiSummary'] = summarizedArticles
             df1.to_sql(f'ArticleData', con=engine, if_exists='append')
