@@ -4,7 +4,7 @@ import logging
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
 import login
-import register
+import registration
 import companyResearch
 import checkDatabase
 import loadCompanies
@@ -57,11 +57,11 @@ def retrieveenrichedlist():
     return y
 
 
-@app.route('/registration', methods=['POST', 'GET'])
+@app.route('/registration', methods=['POST'])
 def register():
     registeruserdata = request.get_json()
-    registerresponse = register.registeruser(registeruserdata)
-    return registerResponse
+    registerresponse = registration.registeruser(registeruserdata)
+    return registerresponse
 
 
 @app.route('/login', methods=['POST', 'GET'])
