@@ -3,7 +3,7 @@ import threading
 import logging
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
-import login
+import loginauth
 import registration
 import companyResearch
 import checkDatabase
@@ -67,7 +67,7 @@ def register():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     loginuserdata = request.get_json()
-    loginResponse = login.login(loginuserdata)
+    loginResponse = loginauth.loginauth(loginuserdata)
     return loginResponse
 
 
