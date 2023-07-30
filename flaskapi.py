@@ -3,6 +3,8 @@ import threading
 import logging
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
+import register
+import login
 import companyResearch
 import checkDatabase
 import loadCompanies
@@ -22,14 +24,6 @@ def welcome():
     jsonstring = request.get_json()
     tasks.researchworker.delay(jsonstring)
     return "Sent to worker"
-
-
-@app.route('/tester', methods=['GET'])
-def two():
-    if request.method == "GET":
-        return {'message': 'Alana',
-                'method': request.method
-                }
 
 
 @app.route('/checkdatabase', methods=['GET'])
@@ -61,6 +55,21 @@ def retrieveenrichedlist():
     response = returnList.load_database()
     y = json.loads(response)
     return y
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    registeruserdata = request.get_json()
+    registerResponse = register.register(registeruserdata)
+    return registerResponse
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    loginuserdata = request.get_json()
+    loginResponse = login.login(loginuserdata)
+    return loginResponse
+
 
 
 if __name__ == '__main__':

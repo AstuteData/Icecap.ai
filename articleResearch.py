@@ -9,6 +9,8 @@ cur = None
 engine = create_engine(
     'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
+researchedCompanies = []
+researchedCompaniesIndex = []
 
 def prep_article_data(jsonstring):
     df = pd.json_normalize(jsonstring, max_level=0)
@@ -19,10 +21,10 @@ def prep_article_data(jsonstring):
         currentCompanyDomain = (df['domain'][ind])
         uniqueID = (df['UniqueID'][ind])
 
-        article_search(currentCompany, currentCompanyDomain, uniqueID)
-
-
+        article_search(researchedCompanies, currentCompany, currentCompanyDomain, uniqueID)
 def article_search(currentCompany, currentCompanyDomain, uniqueID):
+
+    researchedCompanies.append(currentCompany)
 
     print("Article search")
     params = {
@@ -136,10 +138,28 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         summarizedArticles.append(response)
 
         if articleCount == df1.index.size:
+            with engine.connect() as conn:
+                select = text('SELECT * FROM "CompanyData"')
+                PostgresCompanyDf = pd.read_sql_query(select, conn)
+                PostgresCompanyDf = PostgresCompanyDf.drop(columns='index')
+
+            researchedCompaniesLen = len(researchedCompanies)
+
+            for i in range(researchedCompaniesLen):
+                locateIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin([researchedCompanies[i]]).any(axis=1)].index
+                researchedCompaniesIndex.append(locateIndex)
+
+            for j in range(researchedCompaniesLen):
+                currentIndex = researchedCompaniesIndex[j]
+                PostgresCompanyDf.at[currentIndex, 'ResearchStatus'] = 'ResearchComplete'
+
             df1['AiSummary'] = summarizedArticles
             df1.to_sql(f'ArticleData', con=engine, if_exists='append')
+            PostgresCompanyDf.to_sql(f'CompanyData', con=engine, if_exists='append')
+            conn.close()
             print("Process finished")
 
+            return "Article Research Complete"
         elif articleCount != df1.index.size:
             print("next article")
             continue
