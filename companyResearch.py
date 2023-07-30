@@ -59,7 +59,7 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
             df = pd.DataFrame.from_dict([r_filtered])
             df['UniqueID'] = uniqueID
             df['originalCompanyName'] = currentCompany
-            df['ResearchStatus'] = " "
+            df['ResearchStatus'] = None
             df.to_sql(f'CompanyData', con=engine, if_exists='append')
         except:
             pass
