@@ -3,8 +3,8 @@ import threading
 import logging
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
-import register
 import login
+import register
 import companyResearch
 import checkDatabase
 import loadCompanies
@@ -57,10 +57,10 @@ def retrieveenrichedlist():
     return y
 
 
-@app.route('/register', methods=['POST', 'GET'])
+@app.route('/registration', methods=['POST', 'GET'])
 def register():
     registeruserdata = request.get_json()
-    registerResponse = register.registeruser(registeruserdata)
+    registerresponse = register.registeruser(registeruserdata)
     return registerResponse
 
 
