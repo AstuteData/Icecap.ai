@@ -21,7 +21,7 @@ def loginauth(loginuserdata):
             PostgresUserDf = PostgresUserDf.drop(columns='index')
             conn.close()
 
-        ExistingEmailCheck = currentEmail in PostgresUserDf['Email Address'].values
+        ExistingEmailCheck = currentEmail in PostgresUserDf['EmailAddress'].values
     except:
         ExistingEmailCheck = False
 
