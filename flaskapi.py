@@ -60,7 +60,7 @@ def retrieveenrichedlist():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     registeruserdata = request.get_json()
-    registerResponse = register.register(registeruserdata)
+    registerResponse = register.registeruser(registeruserdata)
     return registerResponse
 
 

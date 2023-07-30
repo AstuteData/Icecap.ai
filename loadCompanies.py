@@ -27,4 +27,5 @@ def load_researched_data():
 
     clean_PostgresCompanyDf = PostgresCompanyDf.loc[PostgresCompanyDf['ResearchStatus'].str.contains("ResearchComplete", na=False)]
     jsonlist = clean_PostgresCompanyDf.to_json(orient='records')
+    print(jsonlist)
     return jsonlist
