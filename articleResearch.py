@@ -144,7 +144,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             PostgresCompanyDf.at[currentIndex[0], 'ResearchStatus'] = 'ResearchComplete'
             df1['AiSummary'] = summarizedArticles
             df1.to_sql(f'ArticleData', con=engine, if_exists='append')
-            PostgresCompanyDf.to_sql(f'CompanyData', con=engine, if_exists='append')
+            PostgresCompanyDf.to_sql(f'CompanyData', con=engine, if_exists='replace')
             conn.close()
             print("Process finished")
         elif articleCount != df1.index.size:
