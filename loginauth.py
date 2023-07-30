@@ -32,8 +32,10 @@ def loginauth(loginuserdata):
         existingPassword = (PostgresUserDf['Password'][emailPosition])
 
         if currentEmail == existingEmail and currentPassword == existingPassword:
+            print("Successful Login")
             return("LoginSuccessful ")
         else:
+            print("Unsuccessful login")
             return("LoginUnsuccessful")
     else:
         return("ErrorNoExistingEmail")
