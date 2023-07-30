@@ -138,7 +138,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
                 select = text('SELECT * FROM "CompanyData"')
                 PostgresCompanyDf = pd.read_sql_query(select, conn)
                 PostgresCompanyDf = PostgresCompanyDf.drop(columns='index')
-            currentIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin(currentCompany).any(axis=1)].index.tolist()
+            currentIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin([currentCompany]).any(axis=1)].index.tolist()
             print(currentCompany)
             print(currentIndex)
             PostgresCompanyDf.at[currentIndex[0], 'ResearchStatus'] = 'ResearchComplete'
