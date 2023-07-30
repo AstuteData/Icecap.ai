@@ -64,14 +64,14 @@ def register():
     return registerresponse
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST'])
 def login():
     loginuserdata = request.get_json()
     loginResponse = loginauth.loginauth(loginuserdata)
     return loginResponse
 
 
-@app.route('/researchstatuscheck', methods=['POST', 'GET'])
+@app.route('/researchstatuscheck', methods=['POST'])
 def check_research_status():
     response = loadCompanies.load_researched_data()
     y = json.loads(response)

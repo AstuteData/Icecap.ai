@@ -33,7 +33,7 @@ def loginauth(loginuserdata):
 
         if currentEmail == existingEmail and currentPassword == existingPassword:
             print("Successful Login")
-            return("LoginSuccessful ")
+            return("LoginSuccessful")
         else:
             print("Unsuccessful login")
             return("LoginUnsuccessful")
