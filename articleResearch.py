@@ -138,19 +138,15 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
                 select = text('SELECT * FROM "CompanyData"')
                 PostgresCompanyDf = pd.read_sql_query(select, conn)
                 PostgresCompanyDf = PostgresCompanyDf.drop(columns='index')
-
-
-            currentIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin(currentCompany).any(axis=1)].index
+            currentIndex = PostgresCompanyDf.loc[PostgresCompanyDf.isin(currentCompany).any(axis=1)].index.tolist()
             print(currentCompany)
             print(currentIndex)
-            PostgresCompanyDf.at[currentIndex, 'ResearchStatus'] = 'ResearchComplete'
+            PostgresCompanyDf.at[currentIndex[0], 'ResearchStatus'] = 'ResearchComplete'
             df1['AiSummary'] = summarizedArticles
             df1.to_sql(f'ArticleData', con=engine, if_exists='append')
             PostgresCompanyDf.to_sql(f'CompanyData', con=engine, if_exists='append')
             conn.close()
             print("Process finished")
-
-            return "Article Research Complete"
         elif articleCount != df1.index.size:
             print("next article")
             continue
