@@ -13,6 +13,7 @@ def load_database():
         df = pd.read_sql_query(select, conn)
         df = df.drop(columns='index')
         conn.close()
+
     jsonlist = df.to_json(orient='records')
     return jsonlist
 
@@ -23,6 +24,7 @@ def load_researched_data():
         PostgresCompanyDf = pd.read_sql_query(select, conn)
         PostgresCompanyDf = PostgresCompanyDf.drop(columns='index')
         conn.close()
+
     clean_PostgresCompanyDf = PostgresCompanyDf.loc[PostgresCompanyDf['ResearchStatus'].str.contains("ResearchComplete")]
     jsonlist = clean_PostgresCompanyDf.to_json(orient='records')
     return jsonlist
