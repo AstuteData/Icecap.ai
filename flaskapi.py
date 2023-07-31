@@ -1,6 +1,3 @@
-import os
-import threading
-import logging
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
 import loginauth
@@ -12,7 +9,6 @@ import json
 import returnList
 import tasks
 import nltk
-import requests
 nltk.download('punkt')
 
 app = Flask(__name__)

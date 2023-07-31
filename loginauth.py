@@ -1,7 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
-import uniqueIDfunc
-import requests
+import json
 
 conn = None
 cur = None
