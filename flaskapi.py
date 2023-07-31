@@ -67,7 +67,7 @@ def login():
     return loginResponse
 
 
-@app.route('/researchstatuscheck', methods=['POST'])
+@app.route('/researchstatuscheck', methods=['POST', 'GET'])
 def check_research_status():
     response = loadCompanies.load_researched_data()
     y = json.loads(response)
