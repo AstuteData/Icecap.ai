@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS, cross_origin
+import getexistingresearch
 import loginauth
 import registration
 import companyResearch
@@ -72,6 +73,13 @@ def check_research_status():
     response = loadCompanies.load_researched_data()
     y = json.loads(response)
     return y
+
+
+@app.route('/companyresearch', methods=['GET'])
+def get_existing_research():
+    companyid = request.get_json()
+    existingresearch = getexistingresearch.getresearch(companyid)
+    return existingresearch
 
 
 
