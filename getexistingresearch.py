@@ -17,13 +17,8 @@ def getresearch(companyid):
     print(companyid)
     print(companyid_str)
     print(postgresArticleDf)
-
-    return companyid
-
-    '''postgresArticleDf_Filtered = postgresArticleDf.query("UniqueID == @companyid")
-    print(postgresArticleDf_Filtered)
-
+    postgresArticleDf_Filtered = postgresArticleDf.query("UniqueID == @companyid_str")
     postgresArticleDf_Json = postgresArticleDf_Filtered.to_json(orient='records')
-    print(postgresArticleDf_Json)'''
+    return postgresArticleDf_Json
 
 
