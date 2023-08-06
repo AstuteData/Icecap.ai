@@ -13,6 +13,8 @@ def getresearch(companyid):
         postgresArticleDf = pd.read_sql_query(select, conn)
         conn.close()
 
+    companyid_str = companyid.get("CompanyId")
+    print(idstr)
     print(postgresArticleDf)
     print(companyid)
 
