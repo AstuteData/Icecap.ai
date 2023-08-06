@@ -11,19 +11,17 @@ def getresearch(companyid):
     with engine.connect() as conn:
         select = text('SELECT * FROM "ArticleData"')
         postgresArticleDf = pd.read_sql_query(select, conn)
-        postgresArticleDf = postgresArticleDf.drop(columns='index')
         conn.close()
 
+    print(postgresArticleDf)
     print(companyid)
-    formatted_companyid = json.dumps(companyid)
-    print(formatted_companyid)
-    single_companyid = formatted_companyid[0]
-    print(single_companyid)
 
-    postgresArticleDf_Filtered = postgresArticleDf.query("UniqueID == @companyid")
+    return companyid
+
+    '''postgresArticleDf_Filtered = postgresArticleDf.query("UniqueID == @companyid")
     print(postgresArticleDf_Filtered)
 
     postgresArticleDf_Json = postgresArticleDf_Filtered.to_json(orient='records')
-    print(postgresArticleDf_Json)
+    print(postgresArticleDf_Json)'''
 
-    return postgresArticleDf_Json
+
