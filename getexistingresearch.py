@@ -14,9 +14,9 @@ def getresearch(companyid):
         conn.close()
 
     companyid_str = companyid.get("CompanyId")
-    print(idstr)
-    print(postgresArticleDf)
     print(companyid)
+    print(companyid_str)
+    print(postgresArticleDf)
 
     return companyid
 
