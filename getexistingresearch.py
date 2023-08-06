@@ -15,6 +15,10 @@ def getresearch(companyid):
         conn.close()
 
     print(companyid)
+    formatted_companyid = json.loads(companyid)
+    print(formatted_companyid)
+    single_companyid = formatted_companyid[0]
+    print(single_companyid)
 
     postgresArticleDf_Filtered = postgresArticleDf.query("UniqueID == @companyid")
     print(postgresArticleDf_Filtered)
