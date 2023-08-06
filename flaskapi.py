@@ -75,7 +75,7 @@ def check_research_status():
     return y
 
 
-@app.route('/companyresearch', methods=['GET'])
+@app.route('/companyresearch', methods=['POST', 'GET'])
 def get_existing_research():
     companyid = request.get_json()
     existingresearch = getexistingresearch.getresearch(companyid)
