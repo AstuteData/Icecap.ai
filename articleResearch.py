@@ -21,14 +21,16 @@ def prep_article_data(jsonstring):
         uniqueID = (df['UniqueID'][ind])
 
         article_search(currentCompany, currentCompanyDomain, uniqueID)
+
 def article_search(currentCompany, currentCompanyDomain, uniqueID):
     openai.api_key = "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"
     modelEngine = "text-davinci-003"
     print("Article search")
+    articleQ = (f"{currentCompany} business articles")
     params = {
     'api_key': '172D9AB76C6943D3ACD0BFACD1893705',
       'search_type': 'news',
-      'q': {currentCompanyDomain},
+      'q': {articleQ},
       'news_type': 'all',
       'google_domain': 'google.com',
       'sort_by': 'date',
@@ -91,7 +93,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         except:
             pass
 
-    businessOrNotPrompt = "You will classify articles as 'business related' or 'not business related' after analysing " \
+    '''businessOrNotPrompt = "You will classify articles as 'business related' or 'not business related' after analysing " \
                           "this text. 'Business related' articles will have information that can be used to position " \
                           "a product to somebody, if there is no information that can be used to position a product, " \
                           "then you will classify the article as 'not business related'. You do not need to give the " \
@@ -99,7 +101,6 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
                           "and classify the following article:"
 
     for i in texts:
-        print(i)
         articleCheckingPrompt = (f"{businessOrNotPrompt} + {i}")
         completion = openai.Completion.create(
             model=modelEngine,
@@ -111,13 +112,12 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             presence_penalty=0.5,
         )
         businessOrNot = completion.choices[0].text
-        businessArticleConfirmation.append(businessOrNot)
+        businessArticleConfirmation.append(businessOrNot)'''
 
     data = {'Title': titles,
             'Article': goodArticleLinks,
             'Summary': summaries,
             'Text': texts,
-            'Confirmation': businessArticleConfirmation
             }
 
     print(data)
@@ -129,9 +129,8 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
 
     print(df1)
 
-    df1 = df1.loc[df1['Confirmation'].str.contains('Business related', regex=False)]
-    df1 = df1.drop('Confirmation', axis=1)
-    print(df1)
+    '''df1 = df1.loc[df1['Confirmation'].str.contains('Business related', regex=False)]
+    df1 = df1.drop('Confirmation', axis=1)'''
 
     articlePrompt = "You will summarize this article in 5 bullet points. You will only use bullet points and not dashes: "
     articleCount = 0
