@@ -112,22 +112,23 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         businessOrNot = completion.choices[0].text
         businessArticleConfirmation.append(businessOrNot)
 
-    for index, confirmation in enumerate(businessArticleConfirmation):
-        print(titles[index])
-        if businessArticleConfirmation[confirmation] == "Not business related":
+    for i in range(len(businessArticleConfirmation)):
+        print(i)
+        print(titles[i])
+        if businessArticleConfirmation[i] == "Not business related":
             print("Not business related")
-            del titles[index]
-            del goodArticleLinks[index]
-            del summaries[index]
-            del texts[index]
-            del authors[index]
-            del keywords[index]
-        elif businessArticleConfirmation[confirmation] == "Business related":
+            del titles[i]
+            del goodArticleLinks[i]
+            del summaries[i]
+            del texts[i]
+            del authors[i]
+            del keywords[i]
+        elif businessArticleConfirmation[i] == "Business related":
             print("Business related")
             pass
         else:
             print("Error: Neither business related or not business related. This is what was logged by OpenAI:")
-            print(businessArticleConfirmation[confirmation])
+            print(businessArticleConfirmation[i])
             pass
 
     data = {'Title': titles,
