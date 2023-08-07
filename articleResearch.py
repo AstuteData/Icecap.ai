@@ -22,7 +22,8 @@ def prep_article_data(jsonstring):
 
         article_search(currentCompany, currentCompanyDomain, uniqueID)
 def article_search(currentCompany, currentCompanyDomain, uniqueID):
-
+    openai.api_key = "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"
+    modelEngine = "text-davinci-003"
     print("Article search")
     params = {
     'api_key': '172D9AB76C6943D3ACD0BFACD1893705',
@@ -54,6 +55,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     texts = []
     authors = []
     keywords = []
+    businessArticleConfirmation = []
 
     for row in df.itertuples():
         allArticleLinks.append(row.link)
@@ -89,6 +91,45 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         except:
             pass
 
+    businessOrNotPrompt = "You will classify articles as 'business related' or 'not business related' after analysing " \
+                          "this text. 'Business related' articles will have information that can be used to position " \
+                          "a product to somebody, if there is no information that can be used to position a product, " \
+                          "then you will classify the article as 'not business related'. You do not need to give the " \
+                          "reasoning behind this, answer only 'business related' or 'not business related'. Analyse " \
+                          "and classify the following article:"
+
+    for i in texts:
+        completion = openai.Completion.create(
+            model=modelEngine,
+            prompt=businessOrNotPrompt,
+            temperature=0.5,
+            max_tokens=200,
+            top_p=1,
+            frequency_penalty=0.0,
+            presence_penalty=0.5,
+        )
+
+        businessOrNot = completion.choices[0].text
+        businessArticleConfirmation.append(businessOrNot)
+
+    for index, confirmation in enumerate(businessArticleConfirmation):
+        print(titles[index])
+        if businessArticleConfirmation[confirmation] == "Not business related":
+            print("Not business related")
+            del titles[index]
+            del goodArticleLinks[index]
+            del summaries[index]
+            del texts[index]
+            del authors[index]
+            del keywords[index]
+        elif businessArticleConfirmation[confirmation] == "Business related":
+            print("Business related")
+            pass
+        else:
+            print("Error: Neither business related or not business related. This is what was logged by OpenAI:")
+            print(businessArticleConfirmation[confirmation])
+            pass
+
     data = {'Title': titles,
             'Article': goodArticleLinks,
             'Summary': summaries,
@@ -102,7 +143,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     df1['CompanyName'] = currentCompany
     df1['UniqueID'] = uniqueID
 
-    articlePrompt = "Summarize this article in 5 bullet points: "
+    articlePrompt = "You will summarize this article in 5 bullet points. You will only use bullet points and not dashes: "
     articleCount = 0
     summarizedArticles = []
 
@@ -117,8 +158,6 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         print(articleCount)
         print("------")
 
-        openai.api_key = "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"
-        modelEngine = "text-davinci-003"
         activePrompt = (f"{articlePrompt} {currentArticleText}")
 
         completion = openai.Completion.create(
