@@ -119,7 +119,6 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
             'Confirmation': businessArticleConfirmation
             }
 
-
     print(data)
 
     df1 = pd.DataFrame.from_dict(data, orient='index')
@@ -130,6 +129,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     print(df1)
 
     df1 = df1.loc[df1['Confirmation'].str.contains('Business related', regex=False)]
+    df1 = df1.drop('Confirmation', axis=1)
     print(df1)
 
     articlePrompt = "You will summarize this article in 5 bullet points. You will only use bullet points and not dashes: "
