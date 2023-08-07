@@ -34,12 +34,6 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
       'news_type': 'all',
       'google_domain': 'google.com',
       'sort_by': 'date',
-      'show_duplicates': 'false',
-      'gl': 'us',
-      'hl': 'en',
-      'time_period': 'custom',
-      'time_period_min': '01-01-2020',
-      'time_period_max': '05-21-2023',
       'output': 'json',
       'num': '10'
     }
