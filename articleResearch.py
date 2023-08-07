@@ -99,16 +99,17 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
                           "and classify the following article:"
 
     for i in texts:
+        print(i)
+        articleCheckingPrompt = (f"{businessOrNotPrompt} + {i}")
         completion = openai.Completion.create(
             model=modelEngine,
-            prompt=businessOrNotPrompt,
+            prompt=articleCheckingPrompt,
             temperature=0.5,
             max_tokens=200,
             top_p=1,
             frequency_penalty=0.0,
             presence_penalty=0.5,
         )
-
         businessOrNot = completion.choices[0].text
         businessArticleConfirmation.append(businessOrNot)
 
