@@ -112,30 +112,13 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
         businessOrNot = completion.choices[0].text
         businessArticleConfirmation.append(businessOrNot)
 
-    for i in range(len(businessArticleConfirmation)):
-        print(i)
-        print(titles[i])
-        if businessArticleConfirmation[i] == "Not business related":
-            print("Not business related")
-            del titles[i]
-            del goodArticleLinks[i]
-            del summaries[i]
-            del texts[i]
-            del authors[i]
-            del keywords[i]
-        elif businessArticleConfirmation[i] == "Business related":
-            print("Business related")
-            pass
-        else:
-            print("Error: Neither business related or not business related. This is what was logged by OpenAI:")
-            print(businessArticleConfirmation[i])
-            pass
-
     data = {'Title': titles,
             'Article': goodArticleLinks,
             'Summary': summaries,
             'Text': texts,
+            'Confirmation': businessArticleConfirmation
             }
+
 
     print(data)
 
@@ -144,11 +127,15 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     df1['CompanyName'] = currentCompany
     df1['UniqueID'] = uniqueID
 
+    print(df1)
+
+    df1 = df1.loc[df1['Confirmation'].str.contains('Business related', regex=False)]
+    print(df1)
+
     articlePrompt = "You will summarize this article in 5 bullet points. You will only use bullet points and not dashes: "
     articleCount = 0
     summarizedArticles = []
 
-    print(df1)
     print(f"Summarising {currentCompany}'s articles")
 
     for ind in df1.index:
