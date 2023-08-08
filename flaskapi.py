@@ -87,7 +87,7 @@ def get_existing_research():
 def get_company_info():
     if request.method == 'POST':
         companyid = request.get_json()
-        response = getexistingresearch.getresearch(companyid)
+        response = getexistingresearch.getcompanydata(companyid)
         return response
 
 
