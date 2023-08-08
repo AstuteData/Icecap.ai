@@ -54,7 +54,7 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
             r = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={linkedinLink}",
                                     headers={'Authorization': 'basic EvGVkI4x'})
             rp = r.json()
-            keys = ['domainName', 'domain', 'domainTld', 'description', 'industryMain', 'monthlyVisitors', 'revenue', 'totalEmployees', 'yearFounded']
+            keys = ['name', 'domainName', 'domain', 'description', 'descriptionShort', 'industryMain', 'revenue', 'totalEmployees', 'logo', 'industryMain']
             r_filtered = {x: rp[x] for x in keys}
             df = pd.DataFrame.from_dict([r_filtered])
             df['UniqueID'] = uniqueID

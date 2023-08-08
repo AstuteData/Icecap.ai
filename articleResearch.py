@@ -26,7 +26,7 @@ def article_search(currentCompany, currentCompanyDomain, uniqueID):
     openai.api_key = "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"
     modelEngine = "text-davinci-003"
     print("Article search")
-    articleQ = (f"{currentCompany} business articles")
+    articleQ = (f"{currentCompany} {currentCompanyDomain} business articles")
     params = {
     'api_key': '172D9AB76C6943D3ACD0BFACD1893705',
       'search_type': 'news',
