@@ -75,13 +75,20 @@ def check_research_status():
     return y
 
 
-@app.route('/companyresearch', methods=['POST', 'GET'])
+@app.route('/companyresearch', methods=['POST'])
 def get_existing_research():
     if request.method == 'POST':
         companyid = request.get_json()
         response = getexistingresearch.getresearch(companyid)
         return response
 
+
+@app.route('/companyinfo', methods=['POST'])
+def get_company_info():
+    if request.method == 'POST':
+        companyid = request.get_json()
+        response = getexistingresearch.getresearch(companyid)
+        return response
 
 
 if __name__ == '__main__':
