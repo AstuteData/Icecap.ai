@@ -1,5 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
+
+import technologyResearch
 import uniqueIDfunc
 import requests
 
@@ -61,5 +63,7 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
             df['originalCompanyName'] = currentCompany
             df['ResearchStatus'] = None
             df.to_sql(f'CompanyData', con=engine, if_exists='append')
+            technologyResearch.techstack_research(rp, uniqueID)
+
         except:
             pass
