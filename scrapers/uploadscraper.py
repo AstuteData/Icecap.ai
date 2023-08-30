@@ -22,8 +22,8 @@ try:
         prospect_data.drop(columns='index')
 except Exception as error:
     print("An exception has occurred:", error)
-    company_data = []
-    prospect_data = []
+    company_data = pd.Dataframe(columns=['domain'])
+    prospect_data = pd.Dataframe(columns=['linkedin_profile'])
     pass
 
 
