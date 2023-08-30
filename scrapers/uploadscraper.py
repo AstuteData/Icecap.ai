@@ -27,9 +27,10 @@ except Exception as error:
 
 def start_research(upload_data):
     # Organising the json from upload_data
-    domain_header = upload_data[0]
-    linkedin_profile_header = upload_data[1]
-    csv_data = pd.json_normalize(upload_data[2])
+    upload_data_list = json.loads(upload_data)
+    domain_header = upload_data_list['website header']
+    linkedin_profile_header = upload_data_list['linkedin profile header']
+    csv_data = pd.DataFrame.from_dict(upload_data_list['csv'])
     companies_to_research = []
 
     # Researching the company and prospect starts here
