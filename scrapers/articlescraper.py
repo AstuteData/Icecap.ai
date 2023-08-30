@@ -47,7 +47,8 @@ def article_scraper(article_link_list, unique_company_identifier):
             article_data = {'title': scraped_article.title, 'text': scraped_article.maintext,
                             "published": scraped_article.date_publish, 'url': scraped_article.url,
                             'language': scraped_article.language, 'company_identifier': unique_company_identifier}
-            article_row = pd.DataFrame({article_data}, index=[0])
+            article_data_with_keys = {header: element for header,element in article.items()}
+            article_row = pd.DataFrame.from_dict(article_data_with_keys)
             article_row.to_sql(f'ArticleData', con=engine, if_exists='append')
             count = count + 1
 
