@@ -27,3 +27,18 @@ def uniqueCompanyID():
     companyID = (uniqueChar + uniqueNumber)
     print(companyID)
     return companyID
+
+def uniqueProspectID():
+    uniqueIdGen = str(datetime.datetime.now())
+    uniqueId = uniqueIdGen.replace("-", "")
+    uniqueId = uniqueId.replace(" ", "")
+    uniqueId = uniqueId.replace(":", "")
+    uniqueNumber = uniqueId.replace(".", "")
+    uniqueChar = ""
+    for i in range(12):
+        CharGen = str(random.choice(string.ascii_letters))
+        uniqueChar = uniqueChar + CharGen
+        print(uniqueChar)
+    prospectID = (uniqueChar + uniqueNumber)
+    print(prospectID)
+    return prospectID

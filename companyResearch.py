@@ -1,6 +1,5 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
-
 import technologyResearch
 import uniqueIDfunc
 import requests
@@ -49,6 +48,8 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
             df = df.drop(columns='index')
             locateIndex = df.loc[df.isin([currentCompany]).any(axis=1)].index.tolist()
             df = df.loc[[locateIndex[0]]]
+
+            ''' broken code, rewrite. this function is the response for if the company already exists in the db '''
             conn.close()
 
     else:
@@ -56,14 +57,12 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
             r = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={linkedinLink}",
                                     headers={'Authorization': 'basic EvGVkI4x'})
             rp = r.json()
-            keys = ['name', 'domainName', 'domain', 'description', 'descriptionShort', 'industryMain', 'revenue', 'totalEmployees', 'logo', 'industryMain']
+            keys = ['name', 'domainName', 'domain', 'description', 'descriptionShort', 'industryMain', 'revenue', 'totalEmployees', 'logo', 'technologies', 'technologyCategories']
             r_filtered = {x: rp[x] for x in keys}
             df = pd.DataFrame.from_dict([r_filtered])
             df['UniqueID'] = uniqueID
             df['originalCompanyName'] = currentCompany
             df['ResearchStatus'] = None
             df.to_sql(f'CompanyData', con=engine, if_exists='append')
-            technologyResearch.techstack_research(rp, uniqueID)
-
         except:
             pass
