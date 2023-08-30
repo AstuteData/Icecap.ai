@@ -22,6 +22,7 @@ try:
         prospect_data.drop(columns='index')
 except Exception as error:
     print("An exception has occurred:", error)
+    pass
 
 
 def start_research(upload_data):
