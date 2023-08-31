@@ -116,7 +116,7 @@ def prospect_scraping(linkedin_profile, unique_prospect_identifier):
                             'recommendations_count', 'education_details', 'posts', 'certifications', 'publications',
                             'activities',
                             'avatar', 'people_also_viewed']
-                    prospect_data_with_keys = {data: prospect_data_json[data] for data in keys}
+                    prospect_data_with_keys = {i: prospect_data_json[[0][i]] for i in keys}
 
                     # Storing the scraped data
                     researched_prospect = pd.DataFrame.from_dict([prospect_data_with_keys])
