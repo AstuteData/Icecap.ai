@@ -39,21 +39,26 @@ def start_research(upload_data):
         domain = (csv_data[domain_header][index])
         linkedin_profile = (csv_data[linkedin_profile_header][index])
 
+        # Logic to determine if the company and prospect have been previously scraped.
         company_already_exists = (domain in companies_to_research and domain in company_data['domain'].values)
         prospect_already_exists = (linkedin_profile in prospect_data['linkedin_profile'].values)
 
-        if company_already_exists == True and prospect_already_exists == True:
+        if company_already_exists is True and prospect_already_exists is True:
             pass
 
-        elif company_already_exists == True and prospect_already_exists == False:
+        elif company_already_exists is True and prospect_already_exists is False:
             unique_prospect_identifier = uuid.uuid4
             prospect_scraping(linkedin_profile, unique_prospect_identifier)
 
-        elif company_already_exists == False and prospect_already_exists == False:
+        elif company_already_exists is False and prospect_already_exists is False:
             companies_to_research.append(domain)
+
             unique_company_identifier = uuid.uuid4()
+            unique_prospect_identifier = uuid.uuid4()
+
             company_scraping(domain, unique_company_identifier)
             articlescraper.link_scraper(domain, unique_company_identifier)
+            prospect_scraping(linkedin_profile, unique_prospect_identifier)
 
 
 def company_scraping(domain, unique_company_identifier):
