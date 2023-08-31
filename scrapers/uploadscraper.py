@@ -39,18 +39,21 @@ def start_research(upload_data):
         domain = (csv_data[domain_header][index])
         linkedin_profile = (csv_data[linkedin_profile_header][index])
 
-        if domain not in companies_to_research and domain not in company_data['domain'].values:
+        company_already_exists = (domain in companies_to_research and domain in company_data['domain'].values)
+        prospect_already_exists = (linkedin_profile in prospect_data['linkedin_profile'].values)
+
+        if company_already_exists == True and prospect_already_exists == True:
+            pass
+
+        elif company_already_exists == True and prospect_already_exists == False:
+            unique_prospect_identifier = uuid.uuid4
+            prospect_scraping(linkedin_profile, unique_prospect_identifier)
+
+        elif company_already_exists == False and prospect_already_exists == False:
             companies_to_research.append(domain)
             unique_company_identifier = uuid.uuid4()
             company_scraping(domain, unique_company_identifier)
             articlescraper.link_scraper(domain, unique_company_identifier)
-
-        else:
-            if linkedin_profile not in prospect_data['linkedin_profile'].values:
-                unique_prospect_identifier = uuid.uuid4
-                prospect_scraping(linkedin_profile, unique_prospect_identifier)
-            else:
-                continue
 
 
 def company_scraping(domain, unique_company_identifier):
@@ -101,6 +104,20 @@ def prospect_scraping(linkedin_profile, unique_prospect_identifier):
                 if type(result) is list:
                     pending = False
                     r = finalResponse.json()
+
+                    prospect_data_json = r
+                    keys = ['url', 'name', 'position', 'current_company', 'experience', 'city', 'about',
+                            'recommendations',
+                            'recommendations_count', 'education_details', 'posts', 'certifications', 'publications',
+                            'activities',
+                            'avatar', 'people_also_viewed']
+                    prospect_data_with_keys = {data: prospect_data_json[data] for data in keys}
+
+                    # Storing the scraped data
+                    researched_prospect = pd.DataFrame.from_dict([prospect_data_with_keys])
+                    researched_prospect['unique_identifier'] = [unique_prospect_identifier]
+                    researched_prospect.to_sql(f'ProspectData', con=engine, if_exists='append')
+
                 elif type(result) is dict:
                     if "status" in result and result["status"] == "pending":
                         print(result["message"])
@@ -111,14 +128,5 @@ def prospect_scraping(linkedin_profile, unique_prospect_identifier):
         else:
             print(response.text)
 
-        prospect_data_json = r.json()
-        keys = ['url', 'name', 'position', 'current_company', 'experience', 'city', 'about', 'recommendations',
-                'recommendations_count', 'education_details', 'posts', 'certifications', 'publications', 'activities',
-                'avatar', 'people_also_viewed']
-        prospect_data_with_keys = {data: prospect_data_json[data] for data in keys}
 
-        # Storing the scraped data
-        researched_prospect = pd.DataFrame.from_dict([prospect_data_with_keys])
-        researched_prospect['unique_identifier'] = [unique_prospect_identifier]
-        researched_prospect.to_sql(f'ProspectData', con=engine, if_exists='append')
 
