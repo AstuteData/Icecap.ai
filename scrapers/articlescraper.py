@@ -33,26 +33,25 @@ def link_scraper(domain, unique_company_identifier):
         article_link = i['link']
         article_link_list.append(article_link)
 
-    article_scraper(article_link_list, unique_company_identifier)
+    article_scraper_response = json.dumps(article_scraper(article_link_list, unique_company_identifier))
+    return {"status": "success", "response": article_scraper_response}
 
 
 def article_scraper(article_link_list, unique_company_identifier):
     # Loops through the article_link_list url's and scrapes the articles. It will skip url's that return 'None'
     count = 0
+    articles = {}
     for article in range(len(article_link_list)):
         scraped_article = NewsPlease.from_url(article_link_list[article])
         if scraped_article.title is None:
             pass
         else:
             article_data = {'title': scraped_article.title, 'text': scraped_article.maintext,
-                            "published": scraped_article.date_publish, 'url': scraped_article.url,
+                            'published': scraped_article.date_publish, 'url': scraped_article.url,
                             'language': scraped_article.language, 'company_identifier': unique_company_identifier}
-            article_data_with_keys = {header: element for header,element in article_data.items()}
-            article_row = pd.DataFrame.from_dict([article_data_with_keys])
-            article_row.to_sql(f'ArticleData', con=engine, if_exists='append')
-            count = count + 1
-
+            articles.update(article_data)
+            count += 1
             if count == range(len(article_link_list)):
-                return "Articles Scraped Successfully"
+                return articles
             else:
                 continue
