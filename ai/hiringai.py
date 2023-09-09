@@ -11,6 +11,7 @@ engine = create_engine(
 openai.api_key = "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"
 modelEngine = "text-davinci-003"
 
+
 def start_hiring_ai(unique_company_identifier):
     connect_attempt = 0
     connect_successful = False
@@ -29,7 +30,7 @@ def start_hiring_ai(unique_company_identifier):
                 return "Error:", error
 
     queried_company_data_table = company_data_table.query("company identifier == @unique_company_identifier")
-    hiring_posts = json.loads(queried_company_data_table['hiring posts'])
+    hiring_posts = queried_company_data_table['hiring posts']
     analysis_response = hiring_ai_analysis(hiring_posts)
     return analysis_response
 

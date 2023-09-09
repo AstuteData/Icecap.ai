@@ -96,38 +96,21 @@ def start_research(upload_data):
 
             newly_researched_company = {domain: unique_company_identifier}
             companies_to_research.update(newly_researched_company)
-            save_response = save_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier)
+            save_response = save_scraped_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier)
             ai_research_response = ai_analysis_scraped_data(unique_company_identifier, focus)
-
-
-def save_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier):
-    if save_focus == 0:
-        upload = pd.DataFrame.from_dict(scrape_prospects)
-        upload.to_sql(f'Prospect', con=engine, if_exists='append')
-        return "Saving complete"
-    elif save_focus == 1:
-        prospect_upload = pd.DataFrame.from_dict(scrape_prospects)
-        prospect_upload.to_sql(f'Prospect', con=engine, if_exists='append')
-
-        company_upload = pd.DataFrame.from_dict(scrape_company)
-        company_upload['Articles'], company_upload['Hiring Roles'], company_upload['Company ID'] = [scrape_articles, scrape_hiring, unique_company_identifier]
-        return "Saving complete"
-    elif save_focus == 2:
-        # Save only prospect ai results.
-    elif save_focus == 3:
-        # Save company and prospect ai results.
 
 
 def ai_analysis_scraped_data(unique_company_identifier, focus):
     if focus == 0:
+        save_focus = 0
+        hiring_analysis, article_analysis = None, None
         prospect_analysis = prospectai.start_prospect_ai(unique_company_identifier)
-        save_focus = 2
 
         if prospect_analysis['status'] == 'success':
-            contextualisation = contextualiseai.start_contextualisation_ai(unique_company_identifier)
+            contextualisation = contextualiseai.start_contextualisation_ai(focus, hiring_analysis, article_analysis, prospect_analysis)
             if contextualisation['status'] == "success":
                 print("do whatever happens after the contextualisation ai has successfully finished executing")
-                save_focus = 3
+
             else:
                 print("contextualisation analysis failure")
         elif prospect_analysis['status'] != 'success':
@@ -137,9 +120,11 @@ def ai_analysis_scraped_data(unique_company_identifier, focus):
         hiring_analysis = hiringai.start_hiring_ai(unique_company_identifier)
         article_analysis = articleai.start_article_ai(unique_company_identifier)
         prospect_analysis = prospectai.start_prospect_ai(unique_company_identifier)
+        save_focus = 1
 
         status_checked = False
         status_success = False
+
         while hiring_analysis and article_analysis and prospect_analysis is not None and status_checked is False:
             hiring_analysis_status = hiring_analysis['status']
             articles_analysis_status = article_analysis['status']
@@ -151,20 +136,54 @@ def ai_analysis_scraped_data(unique_company_identifier, focus):
                 print("not all successful")
 
         if status_success is True:
-            contextualisation = contextualiseai.start_contextualisation_ai(unique_company_identifier)
-            if contextualisation == "Summary complete":
-                print("do whatever happens after the contextualisation ai has successfully finished executing")
-                save_focus = 3
-            else:
-                pass
+            contextualisation = ai_analysis_contextualisation(focus, hiring_analysis, article_analysis, prospect_analysis)
 
 
-def ai_analysis_contextualisation():
-    # Notes so that I do not forget what to do tomorrow morning.
-    # Pass the unsaved AI analysis' into this function.
-    # Figure out how to loop through the relevant data correctly and create prompts off the back of this.
-    # Return the data to this function.
-    # Return this data to the previous function, then back to the core function.
-    # Pass the data into the save_data function and save the data.
-    # This includes the hiring_analysis, article_analysis, prospect_analysis and contextualisation piece.
+def ai_analysis_contextualisation(focus, hiring_analysis, article_analysis, prospect_analysis):
+    if focus == 0:
+        save_focus = 2
+        query_company_data = company_data.query("company_identifier == @unique_company_identifier")
 
+        hiring_analysis_response = query_company_data['Hiring Analysis']
+        article_analysis_response = query_company_data['Articles Analysis']
+        prospect_analysis_response = prospect_analysis['response']
+
+        contextualisation = contextualiseai.start_contextualisation_ai(focus, prospect_analysis_response, article_analysis_response, hiring_analysis_response)
+    elif focus == 1:
+        save_focus = 3
+        hiring_analysis_response = hiring_analysis['response']
+        article_analysis_response = article_analysis['response']
+        prospect_analysis_response = prospect_analysis['response']
+
+        contextualisation = contextualiseai.start_contextualisation_ai(focus, hiring_analysis_response, article_analysis_response, prospect_analysis_response)
+
+
+
+def save_scraped_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier):
+    if save_focus == 0:
+        upload = pd.DataFrame.from_dict(scrape_prospects)
+        upload.to_sql(f'Prospect', con=engine, if_exists='append')
+        return "Saving complete"
+    elif save_focus == 1:
+        prospect_upload = pd.DataFrame.from_dict(scrape_prospects)
+        prospect_upload.to_sql(f'Prospect', con=engine, if_exists='append')
+
+        company_upload = pd.DataFrame.from_dict(scrape_company)
+        company_upload['Articles'], company_upload['Hiring'], company_upload['Company ID'] = scrape_articles, scrape_hiring, unique_company_identifier
+        company_upload['Hiring Analysis'], company_upload['Article Analysis'] = None, None
+        return "Saving complete"
+
+
+def save_ai_analysis(save_focus, hiring_analysis, article_analysis, prospect_analysis):
+    if save_focus == 0:
+        upload = pd.DataFrame.from_dict(scrape_prospects)
+        upload.to_sql(f'Prospect', con=engine, if_exists='append')
+        return "Saving complete"
+    elif save_focus == 1:
+        prospect_upload = pd.DataFrame.from_dict(scrape_prospects)
+        prospect_upload.to_sql(f'Prospect', con=engine, if_exists='append')
+
+        company_upload = pd.DataFrame.from_dict(scrape_company)
+        company_upload['Articles'], company_upload['Hiring Roles'], company_upload['Company ID'] = scrape_articles, scrape_hiring, unique_company_identifier
+        company_upload['Hiring Analysis'], company_upload['Article Analysis'] = None, None
+        return "Saving complete"
