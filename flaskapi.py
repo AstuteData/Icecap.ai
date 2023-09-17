@@ -1,13 +1,5 @@
-from flask import Flask, render_template, jsonify, request
-from flask_cors import CORS, cross_origin
-import getexistingresearch
-import loginauth
-import registration
-import companyResearch
-import checkDatabase
-import loadCompanies
-import json
-import returnList
+from flask import Flask, request
+from flask_cors import CORS
 import tasks
 
 app = Flask(__name__)
