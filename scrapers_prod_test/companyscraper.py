@@ -2,8 +2,6 @@ import pandas as pd
 import requests
 import pprint as pp
 
-# TESTED. PRODUCTION APPROVED.
-
 
 def company_scraping(company_linkedin_url):
     # Fetching data from TheCompaniesAPI API and storing it.
