@@ -4,8 +4,8 @@ import uuid
 import requests
 import json
 from time import sleep
-from scrapers import companyscraper, articlescraper, prospectscraper, hiringscraperrw
-from ai import articleai, prospectai, hiringai, contextualiseai
+from scrapers_prod_test import companyscraper, articlescraperrw, prospectscraper, hiringscraperrw
+from ai_prod_test import articleai, prospectai, hiringai, contextualiseai
 from bs4 import BeautifulSoup
 
 conn = None
@@ -67,7 +67,7 @@ def start_research(upload_data):
                 while saving is True:
                     save_response = save_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier)
                     if save_response == "Saving complete":
-                        saving1se:
+                        saved = True
                 print("Scraping not successful")
 
         elif company_already_exists is False and prospect_already_exists is False:
@@ -78,7 +78,7 @@ def start_research(upload_data):
 
             # Running the scraping functions. Need to extract the company LinkedIn URL to run the hiring scraper.
             scrape_company = companyscraper.company_scraping(company_linkedin_profile)
-            scrape_articles = articlescraper.article_scraper(domain)
+            scrape_articles = articlescraperrw.article_scraper(domain)
             company_linkedin_url = scrape_company['socialNetworks']['linkedin']
             scrape_prospects = prospectscraper.prospect_scraping(name, position, prospect_linkedin_profile, unique_prospect_identifier, unique_company_identifier)
             scrape_hiring = hiringscraperrw.hiring_scraping(company_linkedin_url)

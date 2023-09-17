@@ -39,7 +39,7 @@ def start_research(upload_data):
     # prospect_already_exists = (prospect_linkedin_profile in prospect_data['linkedin_profile'].values)
 
     name = "Jack Whitehouse"
-    position = "CMO"
+    position = "SDR"
     domain = "Rivery.io"
     prospect_linkedin_profile = "https://www.linkedin.com/in/jackwhitehouse/"
     company_linkedin_profile = "https://www.linkedin.com/company/rivery/"
