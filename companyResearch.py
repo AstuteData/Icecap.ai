@@ -51,7 +51,6 @@ def company_search(linkedinLink, currentCompany, companyCheck, uniqueID):
 
             ''' broken code, rewrite. this function is the response for if the company already exists in the db '''
             conn.close()
-
     else:
         try:
             r = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={linkedinLink}",

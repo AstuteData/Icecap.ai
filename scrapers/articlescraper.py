@@ -20,6 +20,8 @@ def link_scraper(domain, unique_company_identifier):
         'google_domain': 'google.com',
         'sort_by': 'date',
         'output': 'json',
+        'gl': 'us',
+        'lr': 'lang_en',
         'hl': 'en',
         'num': '5'
     }
