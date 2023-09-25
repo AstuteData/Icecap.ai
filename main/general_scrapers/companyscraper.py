@@ -1,21 +1,42 @@
-import pandas as pd
 import requests
-import pprint as pp
+import json
+
+company_id = 1
+company_linkedin_url = 'https://www.linkedin.com/company/rivery/'
 
 
-def company_scraping(company_linkedin_url):
+def company_scraping(company_id, li_company_linkedin_url):
     # Fetching data from TheCompaniesAPI API and storing it.
     try:
-        company_data_response = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={company_linkedin_url}",
-                         headers={'Authorization': 'basic EvGVkI4x'})
-        company_data_json = company_data_response.json()
-        keys = ['name', 'domainName', 'domain', 'description', 'descriptionShort', 'industryMain', 'revenue',
-                'totalEmployees', 'logo', 'technologies', 'technologyCategories', 'socialNetworks']
-        company_data_with_keys = {data: company_data_json[data] for data in keys}
-        pp.pprint(company_data_with_keys)
+        company_data_response = requests.get(f"https://api.thecompaniesapi.com/v1/companies/by-social?linkedin={li_company_linkedin_url}",
+                                             headers={'Authorization': 'basic EvGVkI4x'})
+        r = company_data_response.json()
+        completion = formatted_company_scraping(r, company_id)
+        print(completion)
+        return completion
 
-        return company_data_with_keys
     except Exception as error:
         print(f"There has been an error with this company scrape: {error}")
         return {"status": "failure", "response": error}
         pass
+
+
+def formatted_company_scraping(r, company_id):
+    keys = ['name', 'domainName', 'domain', 'description', 'descriptionShort', 'industryMain', 'revenue',
+            'totalEmployees', 'logo', 'technologies', 'technologyCategories', 'socialNetworks']
+
+    formatted_response = {key: r[key] for key in keys}
+    str_response = {}
+    reduced_response = {}
+
+    for key in formatted_response:
+        if type(formatted_response[key]) == list or type(formatted_response[key]) == dict:
+            value = formatted_response[key]
+            list_reduced = json.dumps(value)
+            reduced_response.update({key: list_reduced})
+        else:
+            str_response.update({key: formatted_response[key]})
+    str_response.update({'company_id': company_id})
+    transformed_general_response = {**str_response, **reduced_response}
+    return transformed_general_response
+

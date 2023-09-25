@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 import uuid
 import json
-from scrapers_prod_test import prospectscraper, hiringscraperrw
+from archive.scrapers_prod_test import prospectscraper, hiringscraperrw
 from main.general_scrapers import companyscraper, articlescraperrw
 from ai_prod_test import articleai, prospectai, hiringai, contextualiseai
 import pprint as pp

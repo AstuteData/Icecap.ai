@@ -1,0 +1,10 @@
+{'job': [{'company': 'Rivery',
+          'company_url': 'https://www.linkedin.com/company/rivery',
+          'job_title': 'Account Executive',
+          'job_url': 'https://www.linkedin.com/jobs/view/account-executive-at-rivery-3709745433',
+          'list_date': '2023-09-10',
+          'location': 'New York, NY'}],
+ 'next_page_api_url': None,
+ 'next_page_no': None,
+ 'previous_page_api_url': None,
+ 'previous_page_no': None}

@@ -25,16 +25,19 @@ def start_contextualisation_ai(article_analysis, prospect_analysis, hiring_analy
                                    f""
 
     # Shouldn't be run if there's no hiring data.
-    hiring_job_count = 0
-    for i in hiring_analysis.values():
-        hiring_job_title = i['Article Title']
-        hiring_job_analysis = i['Article Analysis']
-        hiring_job_count += 1
-        hiring_job_count_str = str(hiring_job_count)
-        hiring_analysis_string += f"Job number: {hiring_job_count_str}" \
-                                  f"Job title: {hiring_job_title}" \
-                                  f"Job analysis: {hiring_job_analysis}" \
-                                  f""
+    if type(hiring_analysis) is str:
+        hiring_analysis_string = "No hiring data."
+    elif type(hiring_analysis) is dict:
+        hiring_job_count = 0
+        for i in hiring_analysis.values():
+            hiring_job_title = i['Article Title']
+            hiring_job_analysis = i['Article Analysis']
+            hiring_job_count += 1
+            hiring_job_count_str = str(hiring_job_count)
+            hiring_analysis_string += f"Job number: {hiring_job_count_str}" \
+                                      f"Job title: {hiring_job_title}" \
+                                      f"Job analysis: {hiring_job_analysis}" \
+                                      f""
 
     prompt = F"The overview:" \
              F"" \
