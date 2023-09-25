@@ -22,8 +22,7 @@ def company_scraping(company_id, li_company_linkedin_url):
 
 
 def formatted_company_scraping(r, company_id):
-    keys = ['name', 'domainName', 'domain', 'description', 'descriptionShort', 'industryMain', 'revenue',
-            'totalEmployees', 'logo', 'technologies', 'technologyCategories', 'socialNetworks']
+    keys = ['domainName', 'domain','industryMain', 'revenue', 'technologies', 'technologyCategories', 'socialNetworks']
 
     formatted_response = {key: r[key] for key in keys}
     str_response = {}
