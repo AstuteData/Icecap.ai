@@ -30,7 +30,6 @@ def scrape_jobs_link(company_linkedin_url):
     r = requests.post(url='https://async.scraperapi.com/jobs', json={'apiKey': 'a084d8aff5227dce52232270ec7188d3',
                                                                      "apiParams": {
                                                                          'ultra-premium': True,
-                                                                         'render': True,
                                                                          'country_code': "us"},
                                                                      'url': formatted_url})
 
@@ -39,7 +38,7 @@ def scrape_jobs_link(company_linkedin_url):
     print(request_id1)
 
     seconds = 0
-    for i in range(4):
+    for i in range(5):
         response = requests.get(url=request_id1)
         print(response)
         print(response.json)
@@ -81,7 +80,6 @@ def scrape_jobs_list(all_jobs_link):
     r = requests.post(url='https://async.scraperapi.com/jobs', json={'apiKey': 'a084d8aff5227dce52232270ec7188d3',
                                                                      "apiParams": {
                                                                          'ultra-premium': True,
-                                                                         'render': True,
                                                                          'country_code': "us"},
                                                                      'url': all_jobs_link})
 
@@ -146,7 +144,6 @@ def scrape_job_data(job_list, all_jobs_link):
                           json={'apiKey': 'a084d8aff5227dce52232270ec7188d3',
                                 "apiParams": {
                                     'ultra-premium': True,
-                                    'render': True,
                                     'country_code': "us"},
                                 'url': job_link})
         r_json = r.json()

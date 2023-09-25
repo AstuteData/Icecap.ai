@@ -28,8 +28,7 @@ def prospect_profile_scraping(name, position, linkedin_profile, unique_prospect_
     # A 1-minute sleep timer initiates to give time for scraping the page.
     r = requests.post(url='https://async.scraperapi.com/jobs', json={'apiKey': "a084d8aff5227dce52232270ec7188d3",
                                                                      "apiParams": {
-                                                                         'ultra-premium': True,
-                                                                         'render': True},
+                                                                         'ultra-premium': True},
                                                                      'url': linkedin_profile})
 
     r_json = r.json()

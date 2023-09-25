@@ -1,14 +1,11 @@
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 import uuid
-import requests
 import json
-from time import sleep
-from scrapers_prod_test import companyscraper, articlescraperrw, prospectscraper, hiringscraperrw
+from scrapers_prod_test import prospectscraper, hiringscraperrw
+from main.general_scrapers import companyscraper, articlescraperrw
 from ai_prod_test import articleai, prospectai, hiringai, contextualiseai
-from bs4 import BeautifulSoup
 import pprint as pp
-from types import NoneType
 
 conn = None
 cur = None
