@@ -1,9 +1,12 @@
 # Tested and works. 24.09.2023
 
+import sys
 import requests
 from sqlalchemy import create_engine
 import json
 import pandas as pd
+sys.path.append('../')
+from main.general_scrapers.companyscraper import company_scraping
 
 conn = None
 cur = None
@@ -11,8 +14,11 @@ engine = create_engine(
     'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.'
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
+li_company_linkedin_url = 'https://www.linkedin.com/company/rivery/'
+company_id = 1
 
-def run_proxycurl(company_id, general_company_completion, li_company_linkedin_url):
+
+def run_proxycurl(company_id, li_company_linkedin_url):
     api_key = 'Hnt8EpqHzgkG97GSkk7Krw'
     headers = {'Authorization': 'Bearer ' + api_key}
     api_endpoint = 'https://nubela.co/proxycurl/api/linkedin/company'
@@ -20,19 +26,29 @@ def run_proxycurl(company_id, general_company_completion, li_company_linkedin_ur
         'url': li_company_linkedin_url,
         'resolve_numeric_id': 'false',
         'categories': 'exclude',
-        'funding_data': 'exclude',
-        'extra': 'exclude',
-        'exit_data': 'exclude',
-        'acquisitions': 'exclude',
+        'funding_data': 'include',
+        'extra': 'include',
+        'exit_data': 'include',
+        'acquisitions': 'include',
         'use_cache': 'if-present',
     }
     response = requests.get(api_endpoint,
                             params=params,
                             headers=headers)
     r = response.json()
-    completion = format_proxycurl_response(r, general_company_completion, company_id)
+    general_company_completion = company_scraping(company_id, li_company_linkedin_url)
+    if general_company_completion['Status'] == 'Success':
+        general_cc_data = general_company_completion['Data']
+        proxycurl_company_completion = format_proxycurl_response(r, general_cc_data, company_id)
+        proxycurl_status = proxycurl_company_completion
+    else:
+        print("-------------------------------------")
+        print("proxycurl_company ---- Process failed")
+        print("failed to fetch general company data")
+        print("-------------------------------------")
+        return False
 
-    if completion is True:
+    if proxycurl_status is True:
         print("---------------------------------------")
         print("proxycurl_company ---- Process complete")
         print("---------------------------------------")
@@ -69,3 +85,6 @@ def format_proxycurl_response(r, general_company_completion, company_id):
     response_dataframe.to_sql(f'company', con=engine, if_exists='append')
 
     return True
+
+
+run_proxycurl(company_id, li_company_linkedin_url)

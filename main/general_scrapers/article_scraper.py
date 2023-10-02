@@ -1,8 +1,7 @@
 import requests
 from newspaper import Article
 import pandas as pd
-from sqlalchemy import create_engine, text
-from bs4 import BeautifulSoup
+from sqlalchemy import create_engine
 import pprint as pp
 
 conn = None

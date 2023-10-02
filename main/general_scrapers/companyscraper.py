@@ -1,8 +1,9 @@
 import requests
 import json
+import pprint as pp
 
 company_id = 1
-company_linkedin_url = 'https://www.linkedin.com/company/rivery/'
+li_company_linkedin_url = 'https://www.linkedin.com/company/rivery/'
 
 
 def company_scraping(company_id, li_company_linkedin_url):
@@ -12,17 +13,17 @@ def company_scraping(company_id, li_company_linkedin_url):
                                              headers={'Authorization': 'basic EvGVkI4x'})
         r = company_data_response.json()
         completion = formatted_company_scraping(r, company_id)
-        print(completion)
-        return completion
+        pp.pprint(completion)
+        return {'Status': 'Success', 'Data': completion}
 
     except Exception as error:
         print(f"There has been an error with this company scrape: {error}")
-        return {"status": "failure", "response": error}
+        return {'Status': 'Failed', 'Data': error}
         pass
 
 
 def formatted_company_scraping(r, company_id):
-    keys = ['domainName', 'domain','industryMain', 'revenue', 'technologies', 'technologyCategories', 'socialNetworks']
+    keys = ['domainName', 'domain', 'industryMain', 'revenue', 'technologies', 'technologyCategories', 'socialNetworks']
 
     formatted_response = {key: r[key] for key in keys}
     str_response = {}
@@ -38,4 +39,3 @@ def formatted_company_scraping(r, company_id):
     str_response.update({'company_id': company_id})
     transformed_general_response = {**str_response, **reduced_response}
     return transformed_general_response
-

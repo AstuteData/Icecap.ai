@@ -3,7 +3,8 @@ from sqlalchemy import create_engine
 import uuid
 import json
 from archive.scrapers_prod_test import prospectscraper, hiringscraperrw
-from main.general_scrapers import companyscraper, articlescraperrw
+from main.general_scrapers import companyscraper
+from archive import articlescraperrw
 from ai_prod_test import articleai, prospectai, hiringai, contextualiseai
 import pprint as pp
 
