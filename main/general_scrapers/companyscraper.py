@@ -2,9 +2,6 @@ import requests
 import json
 import pprint as pp
 
-company_id = 1
-li_company_linkedin_url = 'https://www.linkedin.com/company/rivery/'
-
 
 def company_scraping(company_id, li_company_linkedin_url):
     # Fetching data from TheCompaniesAPI API and storing it.

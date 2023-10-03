@@ -14,9 +14,6 @@ engine = create_engine(
     'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.'
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
-li_company_linkedin_url = 'https://www.linkedin.com/company/rivery/'
-company_id = 1
-
 
 def run_proxycurl(company_id, li_company_linkedin_url):
     api_key = 'Hnt8EpqHzgkG97GSkk7Krw'
@@ -40,24 +37,25 @@ def run_proxycurl(company_id, li_company_linkedin_url):
     if general_company_completion['Status'] == 'Success':
         general_cc_data = general_company_completion['Data']
         proxycurl_company_completion = format_proxycurl_response(r, general_cc_data, company_id)
+        print(proxycurl_company_completion)
         proxycurl_status = proxycurl_company_completion
     else:
         print("-------------------------------------")
         print("proxycurl_company ---- Process failed")
         print("failed to fetch general company data")
         print("-------------------------------------")
-        return False
+        return {'Status': 'Failed', 'Search ID': "None"}
 
-    if proxycurl_status is True:
+    if proxycurl_status['Status'] == 'Success':
         print("---------------------------------------")
         print("proxycurl_company ---- Process complete")
         print("---------------------------------------")
-        return True
+        return {'Status': 'Success', 'Search ID': proxycurl_company_completion}
     else:
         print("-------------------------------------")
         print("proxycurl_company ---- Process failed")
         print("-------------------------------------")
-        return False
+        return {'Status': 'Failed', 'Search ID': "None"}
 
 
 def format_proxycurl_response(r, general_company_completion, company_id):
@@ -84,7 +82,4 @@ def format_proxycurl_response(r, general_company_completion, company_id):
     print(response_dataframe)
     response_dataframe.to_sql(f'company', con=engine, if_exists='append')
 
-    return True
-
-
-run_proxycurl(company_id, li_company_linkedin_url)
+    return str_response['search_id']

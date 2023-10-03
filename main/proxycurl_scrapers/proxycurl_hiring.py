@@ -38,7 +38,7 @@ def run_proxycurl(company_id, search_id):
             print("---------------------------------------")
             print("proxycurl_jobs ---- Process complete")
             print("---------------------------------------")
-            return True
+            return {'Status': 'Success', 'Job List': job_list}
         else:
             print("---------------------------------------")
             print("proxycurl_jobs ---- Process failed")

@@ -46,23 +46,31 @@ def url_search(company_url, company_id):
             continue
     pp.pprint(news_search_results)
 
-    scraped_articles = {}
-    for result in news_search_results:
-        scraped_articles_with_origin = {}
-        count = 0
-        for obj in news_search_results[result]:
-            link = news_search_results[result][obj]['link']
-            source = news_search_results[result][obj]['source']
-            count += 1
-            url = news_search_results[result][obj]['link']
-            print(url)
-            scraped_data = scrape(url)
-            scraped_data['Source'] = source
-            scraped_data['Link'] = link
-            pp.pprint(scraped_data)
-            articles_dataframe = pd.DataFrame([scraped_data])
-            print(articles_dataframe)
-            articles_dataframe.to_sql(f'articles', con=engine, if_exists='append')
+    try:
+        scraped_articles = {}
+        for result in news_search_results:
+            scraped_articles_with_origin = {}
+            count = 0
+            for obj in news_search_results[result]:
+                link = news_search_results[result][obj]['link']
+                source = news_search_results[result][obj]['source']
+                count += 1
+                url = news_search_results[result][obj]['link']
+                print(url)
+                scraped_data = scrape(url)
+                scraped_data['Source'] = source
+                scraped_data['Link'] = link
+                pp.pprint(scraped_data)
+                articles_dataframe = pd.DataFrame([scraped_data])
+                print(articles_dataframe)
+                articles_dataframe.to_sql(f'articles', con=engine, if_exists='append')
+                return {'Status': 'Success'}
+    except Exception as e:
+        print(e)
+        return {'Status': 'Failed'}
+
+
+
 
     print("Finished... exiting.")
 

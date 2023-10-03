@@ -21,18 +21,18 @@ def run_proxycurl(prospect_id, li_prospect_profile_url):
                             headers=headers)
 
     r = response.json()
-    completion = format_proxycurl_response(r)
+    completion = format_proxycurl_response(r, prospect_id)
 
     if completion is True:
         print("---------------------------------------")
         print("proxycurl_prospect ---- Process complete")
         print("---------------------------------------")
-        return True
+        return {'Status': 'Success'}
     else:
         print("-------------------------------------")
         print("proxycurl_prospect ---- Process failed")
         print("-------------------------------------")
-        return False
+        return {'Status': 'Failed'}
 
 
 def format_proxycurl_response(r, prospect_id):
@@ -47,20 +47,22 @@ def format_proxycurl_response(r, prospect_id):
     str_response = {}
     reduced_response = {}
 
-    for key in formatted_response:
-        if type(formatted_response[key]) == list or type(formatted_response[key]) == dict:
-            value = formatted_response[key]
-            list_reduced = json.dumps(value)
-            reduced_response.update({key: list_reduced})
-        else:
-            str_response.update({key: formatted_response[key]})
+    try:
+        for key in formatted_response:
+            if type(formatted_response[key]) == list or type(formatted_response[key]) == dict:
+                value = formatted_response[key]
+                list_reduced = json.dumps(value)
+                reduced_response.update({key: list_reduced})
+            else:
+                str_response.update({key: formatted_response[key]})
 
-    transformed_response = {**str_response, **reduced_response}
-    response_dataframe = pd.DataFrame(transformed_response, index=[0])
-    response_dataframe['prospect_id'] = prospect_id
-    print(response_dataframe)
-    response_dataframe.to_sql(f'prospect', con=engine, if_exists='append')
+        transformed_response = {**str_response, **reduced_response}
+        response_dataframe = pd.DataFrame(transformed_response, index=[0])
+        response_dataframe['prospect_id'] = prospect_id
+        print(response_dataframe)
+        response_dataframe.to_sql(f'prospect', con=engine, if_exists='append')
 
-    return True
-
-run_proxycurl()
+        return True
+    except Exception as e:
+        print(e)
+        return False

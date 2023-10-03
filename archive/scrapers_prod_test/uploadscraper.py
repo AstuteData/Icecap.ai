@@ -53,49 +53,13 @@ def start_research(upload_data):
             pass
 
         elif company_already_exists is True and prospect_already_exists is False:
-            focus = 0
-            save_focus = 0
-            unique_prospect_identifier = uuid.uuid4
-            unique_company_identifier = company_data['company identifier'][ind]
-            scrape_prospects = prospectscraper.prospect_scraping(name, position, prospect_linkedin_profile, unique_prospect_identifier, unique_company_identifier)
-            scrape_company, scrape_articles, scrape_hiring = None, None, None
-
-            if scrape_prospects['status'] == "success":
-                saving = True
-                while saving is True:
-                    save_response = save_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier)
-                    if save_response == "Saving complete":
-                        saved = True
-                print("Scraping not successful")
+            prospect_id = uuid.uuid4
+            filtered_cd_index = company_data[company_data.domain == domain].index[0]
+            company_id = company_data['company identifier'][filtered_cd_index]
 
         elif company_already_exists is False and prospect_already_exists is False:
-            focus = 1
-            save_focus = 1
             unique_company_identifier = uuid.uuid4()
             unique_prospect_identifier = uuid.uuid4()
-
-            # Running the scraping functions. Need to extract the company LinkedIn URL to run the hiring scraper.
-            scrape_company = companyscraper.company_scraping(company_linkedin_profile)
-            scrape_articles = articlescraperrw.article_scraper(domain)
-            company_linkedin_url = scrape_company['socialNetworks']['linkedin']
-            scrape_prospects = prospectscraper.prospect_scraping(name, position, prospect_linkedin_profile, unique_prospect_identifier, unique_company_identifier)
-            scrape_hiring = hiringscraperrw.hiring_scraping(company_linkedin_url)
-
-            status_checked = False
-            while scrape_company and scrape_articles and scrape_prospects and scrape_hiring is not None and status_checked is False:
-                scraped_company_status = scrape_company['status']
-                scraped_articles_status = scrape_articles['status']
-                scraped_prospects_status = scrape_prospects['status']
-                if scraped_prospects_status and scraped_articles_status and scraped_company_status == "success":
-                    print("success")
-                    status_checked = True
-                elif scraped_prospects_status and scraped_articles_status and scraped_company_status != "success":
-                    print("not all successful")
-
-            newly_researched_company = {domain: unique_company_identifier}
-            companies_to_research.update(newly_researched_company)
-            save_response = save_scraped_data(save_focus, scrape_company, scrape_articles, scrape_hiring, scrape_prospects, unique_company_identifier)
-            ai_research_response = ai_analysis_scraped_data(unique_company_identifier, focus)
 
 
 def ai_analysis_scraped_data(unique_company_identifier, focus):

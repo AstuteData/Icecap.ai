@@ -39,7 +39,11 @@ def run_proxycurl(job_list, company_id):
 
     pp.pprint(job_data_list)
     completion = format_proxycurl_response(job_data_list, company_id)
-    return completion
+
+    if completion is True:
+        return {"Status": "Success"}
+    else:
+        return {"Status": "Failed"}
 
 
 def format_proxycurl_response(job_data_list, company_id):
@@ -47,21 +51,25 @@ def format_proxycurl_response(job_data_list, company_id):
             'linkedin_internal_id', 'location', 'title']
     jobs_dataframe = pd.DataFrame(columns=keys)
 
-    for job in job_data_list:
-        formatted_job_response = {key: job[key] for key in keys}
-        str_response = {}
-        reduced_response = {}
-        for key in formatted_job_response:
-            if type(formatted_job_response[key]) == list or type(formatted_job_response[key]) == dict:
-                value = formatted_job_response[key]
-                list_reduced = json.dumps(value)
-                reduced_response.update({key: list_reduced})
-            else:
-                str_response.update({key: formatted_job_response[key]})
-        transformed_job_response = {**str_response, **reduced_response}
-        temp_job_dataframe = pd.DataFrame(transformed_job_response, index=[0])
-        temp_job_dataframe['company_id'] = company_id
-        jobs_dataframe = pd.concat([jobs_dataframe, temp_job_dataframe], ignore_index=True)
+    try:
+        for job in job_data_list:
+            formatted_job_response = {key: job[key] for key in keys}
+            str_response = {}
+            reduced_response = {}
+            for key in formatted_job_response:
+                if type(formatted_job_response[key]) == list or type(formatted_job_response[key]) == dict:
+                    value = formatted_job_response[key]
+                    list_reduced = json.dumps(value)
+                    reduced_response.update({key: list_reduced})
+                else:
+                    str_response.update({key: formatted_job_response[key]})
+            transformed_job_response = {**str_response, **reduced_response}
+            temp_job_dataframe = pd.DataFrame(transformed_job_response, index=[0])
+            temp_job_dataframe['company_id'] = company_id
+            jobs_dataframe = pd.concat([jobs_dataframe, temp_job_dataframe], ignore_index=True)
 
-    jobs_dataframe.to_sql(f'jobs', con=engine, if_exists='append')
-    return True
+        jobs_dataframe.to_sql(f'jobs', con=engine, if_exists='append')
+        return True
+    except Exception as e:
+        print(e)
+        return False
