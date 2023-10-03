@@ -51,11 +51,14 @@ def run_mainframe(upload_data):
             pass
 
         elif company_already_exists is True and prospect_already_exists is False:
-
+            print("Company already exists, prospect does not.")
+            cd_filtered = company_data[company_data.company_id == domain].index[0]
+            company_id = company_data['company_id'][cd_filtered]
 
             prospect_id = uuid.uuid4()
             prospect = proxycurl_prospect.run_proxycurl(company_id, prospect_id, li_prospect_linkedin_url)
-            print("Company already exists, prospect does not.")
+            if prospect['Status'] == 'Success':
+                print("Next part of the app.")
 
         else:
             print("Company and prospect do not exist.")
