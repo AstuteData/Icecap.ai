@@ -1,9 +1,10 @@
-
 from sqlalchemy import create_engine, text
 import uuid
 import json
+import multiprocessing
 import pandas as pd
 import sys
+
 sys.path.append('../')
 from main.proxycurl_scrapers import proxycurl_company, proxycurl_jobs, proxycurl_hiring, proxycurl_prospect
 from main.general_scrapers import article_scraper
@@ -29,9 +30,7 @@ except Exception as error:
     pass
 
 
-def format_csv(upload_data):
-    name_header = upload_data['full name']
-    position_header = upload_data['position']
+def run_mainframe(upload_data):
     domain_header = upload_data['website header']
     prospect_linkedin_profile_header = upload_data['linkedin profile header']
     company_linkedin_url_header = upload_data['company linkedin profile header']
@@ -39,8 +38,6 @@ def format_csv(upload_data):
     companies_to_research = {}
 
     for ind in csv_data.index:
-        name = (csv_data[name_header][ind])
-        position = (csv_data[position_header][ind])
         domain = (csv_data[domain_header][ind])
         li_prospect_linkedin_url = (csv_data[prospect_linkedin_profile_header][ind])
         li_company_linkedin_url = (csv_data[company_linkedin_url_header][ind])
@@ -50,38 +47,40 @@ def format_csv(upload_data):
         prospect_already_exists = (li_prospect_linkedin_url in prospect_data['linkedin_profile'].values)
 
         if company_already_exists is True and prospect_already_exists is True:
+            print("Company and prospect already exist.")
             pass
 
         elif company_already_exists is True and prospect_already_exists is False:
 
 
-def scrape_data(li_company_linkedin_url, company_id, company_url):
-    company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_linkedin_url)
-    cs_status = company_scraping_complete['Status']
-    search_id = company_scraping_complete['Search ID']
+            prospect_id = uuid.uuid4()
+            prospect = proxycurl_prospect.run_proxycurl(company_id, prospect_id, li_prospect_linkedin_url)
+            print("Company already exists, prospect does not.")
 
-    hiring_scraping_complete = proxycurl_hiring.run_proxycurl(company_id, search_id)
-    hs_status = hiring_scraping_complete['Status']
-    job_list = hiring_scraping_complete['Job List']
+        else:
+            print("Company and prospect do not exist.")
+            company_id = uuid.uuid4()
+            prospect_id = uuid.uuid4()
 
-    job_scraping_complete = proxycurl_jobs.run_proxycurl(job_list, company_id)
-    js_status = job_scraping_complete['Status']
+            company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_linkedin_url)
+            cs_status = company_scraping_complete['Status']
+            search_id = company_scraping_complete['Search ID']
 
-    article_scraping_complete = article_scraper.url_search(company_url, company_id)
-    as_status = article_scraping_complete['Status']
+            if cs_status == 'Success':
+                articles = multiprocessing.Process(target=article_scraper.url_search, args=(domain, company_id))
+                prospect = multiprocessing.Process(target=proxycurl_prospect.run_proxycurl, args=(prospect_id, li_prospect_linkedin_url, company_id))
 
-    prospect_scraping_complete = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, search_id)
-    ps_status = prospect_scraping_complete['Status']
+                if __name__ == '__main__':
+                    articles.start()
+                    prospect.start()
 
-    if cs_status == 'Success' and hs_status == 'Success' and js_status == 'Success' and as_status == 'Success' and ps_status == 'Success':
-        print("Next part of the app.")
-    else:
-        print("Something went wrong.")
-        print("CS Status: " + cs_status)
-        print("HS Status: " + hs_status)
-        print("JS Status: " + js_status)
-        print("AS Status: " + as_status)
-        print("PS Status: " + ps_status)
+                    articles.join()
+                    prospect.join()
 
-
-
+                hiring = proxycurl_hiring.run_proxycurl(company_id, search_id)
+                job_list = hiring['Job List']
+                job_scraping_complete = proxycurl_jobs.run_proxycurl(job_list, company_id)
+                if job_scraping_complete['Status'] == 'Success':
+                    print("Next part of the app.")
+            else:
+                print("Something went wrong.")
