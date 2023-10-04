@@ -27,23 +27,23 @@ def run_proxycurl(company_id, search_id):
     r = response.json()
     formatting_completion = format_proxycurl_response(r, company_id)
 
-    if formatting_completion[0] is True:
+    if formatting_completion['Status'] == 'Success':
         print("---------------------------------------")
         print("proxycurl_hiring ---- Process complete")
         print("---------------------------------------")
-        formatted_response = formatting_completion[1]
-        job_list = formatted_response[1]['job']
+        formatted_response = formatting_completion['Data']
+        job_list = formatted_response['job']
         job_completion = proxycurl_jobs.run_proxycurl(job_list, company_id)
-        if job_completion is True:
+        if job_completion['Status'] == 'Success':
             print("---------------------------------------")
             print("proxycurl_jobs ---- Process complete")
             print("---------------------------------------")
-            return {'Status': 'Success', 'Job List': job_list}
+            return {'Status': 'Success', 'Data': 'None'}
         else:
             print("---------------------------------------")
             print("proxycurl_jobs ---- Process failed")
             print("---------------------------------------")
-            return False
+            return {'Status': 'Failed', 'Data': 'None'}
 
     else:
         print("-------------------------------------")
@@ -73,4 +73,4 @@ def format_proxycurl_response(r, company_id):
     print(response_dataframe)
     response_dataframe.to_sql(f'hiring', con=engine, if_exists='append')
 
-    return [True, formatted_response]
+    return {'Status': 'Success', 'Data': formatted_response}

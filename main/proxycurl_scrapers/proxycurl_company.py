@@ -15,12 +15,12 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def run_proxycurl(company_id, li_company_linkedin_url):
+def run_proxycurl(company_id, li_company_profile_url):
     api_key = 'Hnt8EpqHzgkG97GSkk7Krw'
     headers = {'Authorization': 'Bearer ' + api_key}
     api_endpoint = 'https://nubela.co/proxycurl/api/linkedin/company'
     params = {
-        'url': li_company_linkedin_url,
+        'url': li_company_profile_url,
         'resolve_numeric_id': 'false',
         'categories': 'exclude',
         'funding_data': 'include',
@@ -33,7 +33,7 @@ def run_proxycurl(company_id, li_company_linkedin_url):
                             params=params,
                             headers=headers)
     r = response.json()
-    general_company_completion = company_scraping(company_id, li_company_linkedin_url)
+    general_company_completion = company_scraping(company_id, li_company_profile_url)
     if general_company_completion['Status'] == 'Success':
         general_cc_data = general_company_completion['Data']
         proxycurl_company_completion = format_proxycurl_response(r, general_cc_data, company_id)
@@ -50,7 +50,7 @@ def run_proxycurl(company_id, li_company_linkedin_url):
         print("---------------------------------------")
         print("proxycurl_company ---- Process complete")
         print("---------------------------------------")
-        return {'Status': 'Success', 'Search ID': proxycurl_company_completion}
+        return {'Status': 'Success', 'Search ID': proxycurl_status['Data']}
     else:
         print("-------------------------------------")
         print("proxycurl_company ---- Process failed")
@@ -82,4 +82,4 @@ def format_proxycurl_response(r, general_company_completion, company_id):
     print(response_dataframe)
     response_dataframe.to_sql(f'company', con=engine, if_exists='append')
 
-    return str_response['search_id']
+    return {'Status': 'Success', 'Data': str_response['search_id']}

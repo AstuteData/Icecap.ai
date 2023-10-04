@@ -1,9 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
 import uuid
-from archive.scrapers_prod_test import prospectscraper, hiringscraperrw
-from main.general_scrapers import companyscraper
-from archive import articlescraperrw
 from ai_prod_test import articleai, prospectai, hiringai, contextualiseai
 
 conn = None

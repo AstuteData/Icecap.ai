@@ -14,7 +14,7 @@ engine = create_engine(
 def run_proxycurl(job_list, company_id):
     formatted_job_list = []
     job_counter = 0
-    for job in job_list['job']:
+    for job in job_list:
         job_title = job['job_title']
         job_url = job['job_url']
         formatted_job_data = {'job_title': job_title, 'job_url': job_url}

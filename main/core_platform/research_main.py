@@ -1,12 +1,12 @@
 from sqlalchemy import create_engine, text
 import uuid
-import json
 import multiprocessing
 import pandas as pd
 import sys
 
-sys.path.append('../')
-from main.proxycurl_scrapers import proxycurl_company, proxycurl_jobs, proxycurl_hiring, proxycurl_prospect
+sys.path.append('../proxycurl_scrapers')
+sys.path.append('../general_scrapers')
+from main.proxycurl_scrapers import proxycurl_hiring, proxycurl_company, proxycurl_prospect, proxycurl_jobs
 from main.general_scrapers import article_scraper
 
 conn = None
@@ -71,7 +71,7 @@ def run_mainframe(upload_data):
 
             if cs_status == 'Success':
                 articles = multiprocessing.Process(target=article_scraper.url_search, args=(domain, company_id))
-                prospect = multiprocessing.Process(target=proxycurl_prospect.run_proxycurl, args=(prospect_id, li_prospect_linkedin_url, company_id))
+                prospect = multiprocessing.Process(target=proxycurl_prospect.run_proxycurl, args=(prospect_id, li_prospect_profile_url, company_id))
 
                 if __name__ == '__main__':
                     articles.start()
@@ -87,3 +87,27 @@ def run_mainframe(upload_data):
                     print("Next part of the app.")
             else:
                 print("Something went wrong.")
+
+
+def test():
+    print("Test started")
+    li_company_profile_url = "https://www.linkedin.com/company/rivery/"
+    li_prospect_profile_url = "https://www.linkedin.com/in/jackwhitehouse/"
+    domain = "rivery.io"
+    print("Company and prospect do not exist.")
+    company_id = uuid.uuid4()
+    prospect_id = uuid.uuid4()
+
+    company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_profile_url)
+    cs_status = company_scraping_complete['Status']
+    search_id = company_scraping_complete['Search ID']
+
+    if cs_status == 'Success':
+        article = article_scraper.url_search(domain, company_id)
+        prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id)
+        hiring = proxycurl_hiring.run_proxycurl(company_id, search_id)
+    else:
+        print("Something went wrong.")
+
+
+test()

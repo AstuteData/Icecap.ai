@@ -10,9 +10,6 @@ engine = create_engine(
     'postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df6b7268edd3e85ddc1ba488a8e233759731d2@ec2-34-241-82-91.'
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
-company_url = 'Rivery.io'
-company_id = 1
-
 
 def url_search(company_url, company_id):
     news_domains = ['businesswire.com', 'finance.yahoo.com', 'prnewswire.com', 'globenewswire.com']
@@ -96,6 +93,3 @@ def scrape(url):
             retries += 1
             if retries == 3:
                 return url
-
-
-url_search(company_url, company_id)
