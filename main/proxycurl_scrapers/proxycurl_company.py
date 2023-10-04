@@ -15,7 +15,7 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def run_proxycurl(company_id, li_company_profile_url):
+def run_proxycurl(company_id, li_company_profile_url, research_id):
     api_key = 'Hnt8EpqHzgkG97GSkk7Krw'
     headers = {'Authorization': 'Bearer ' + api_key}
     api_endpoint = 'https://nubela.co/proxycurl/api/linkedin/company'
@@ -36,7 +36,7 @@ def run_proxycurl(company_id, li_company_profile_url):
     general_company_completion = company_scraping(company_id, li_company_profile_url)
     if general_company_completion['Status'] == 'Success':
         general_cc_data = general_company_completion['Data']
-        proxycurl_company_completion = format_proxycurl_response(r, general_cc_data, company_id)
+        proxycurl_company_completion = format_proxycurl_response(r, general_company_completion, company_id, research_id)
         print(proxycurl_company_completion)
         proxycurl_status = proxycurl_company_completion
     else:
@@ -58,7 +58,7 @@ def run_proxycurl(company_id, li_company_profile_url):
         return {'Status': 'Failed', 'Search ID': "None"}
 
 
-def format_proxycurl_response(r, general_company_completion, company_id):
+def format_proxycurl_response(r, general_company_completion, company_id, research_id):
     keys = ['acquisitions', 'background_cover_image_url', 'company_size_on_linkedin', 'company_type', 'description',
             'exit_data', 'extra', 'follower_count', 'founded_year', 'funding_data', 'hq', 'industry',
             'linkedin_internal_id', 'locations', 'name', 'profile_pic_url', 'search_id', 'similar_companies',
@@ -79,6 +79,7 @@ def format_proxycurl_response(r, general_company_completion, company_id):
 
     transformed_response = {**str_response, **reduced_response, **general_company_completion}
     response_dataframe = pd.DataFrame(transformed_response, index=[0])
+    response_dataframe['research_id'] = research_id
     print(response_dataframe)
     response_dataframe.to_sql(f'company', con=engine, if_exists='append')
 

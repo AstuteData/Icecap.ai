@@ -11,7 +11,7 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def run_proxycurl(company_id, search_id):
+def run_proxycurl(company_id, search_id, research_id):
     api_key = 'Hnt8EpqHzgkG97GSkk7Krw'
     headers = {'Authorization': 'Bearer ' + api_key}
     api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin/company/job'
@@ -25,7 +25,7 @@ def run_proxycurl(company_id, search_id):
                             params=params,
                             headers=headers)
     r = response.json()
-    formatting_completion = format_proxycurl_response(r, company_id)
+    formatting_completion = format_proxycurl_response(r, company_id, research_id)
 
     if formatting_completion['Status'] == 'Success':
         print("---------------------------------------")
@@ -33,7 +33,7 @@ def run_proxycurl(company_id, search_id):
         print("---------------------------------------")
         formatted_response = formatting_completion['Data']
         job_list = formatted_response['job']
-        job_completion = proxycurl_jobs.run_proxycurl(job_list, company_id)
+        job_completion = proxycurl_jobs.run_proxycurl(job_list, company_id, research_id)
         if job_completion['Status'] == 'Success':
             print("---------------------------------------")
             print("proxycurl_jobs ---- Process complete")
@@ -52,7 +52,7 @@ def run_proxycurl(company_id, search_id):
         return False
 
 
-def format_proxycurl_response(r, company_id):
+def format_proxycurl_response(r, company_id, research_id):
     keys = ['job']
 
     formatted_response = {key: r[key] for key in keys}
@@ -70,6 +70,7 @@ def format_proxycurl_response(r, company_id):
     transformed_response = {**str_response, **reduced_response}
     response_dataframe = pd.DataFrame(transformed_response, index=[0])
     response_dataframe['company_id'] = company_id
+    response_dataframe['research_id'] = research_id
     print(response_dataframe)
     response_dataframe.to_sql(f'hiring', con=engine, if_exists='append')
 

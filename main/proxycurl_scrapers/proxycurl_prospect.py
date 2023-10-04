@@ -10,7 +10,7 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def run_proxycurl(prospect_id, li_prospect_profile_url, company_id):
+def run_proxycurl(prospect_id, li_prospect_profile_url, company_id, research_id):
     api_key = 'Hnt8EpqHzgkG97GSkk7Krw'
     headers = {'Authorization': 'Bearer ' + api_key}
     api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
@@ -21,7 +21,7 @@ def run_proxycurl(prospect_id, li_prospect_profile_url, company_id):
                             headers=headers)
 
     r = response.json()
-    completion = format_proxycurl_response(r, prospect_id, company_id)
+    completion = format_proxycurl_response(r, prospect_id, company_id, research_id)
 
     if completion is True:
         print("---------------------------------------")
@@ -35,7 +35,7 @@ def run_proxycurl(prospect_id, li_prospect_profile_url, company_id):
         return {'Status': 'Failed'}
 
 
-def format_proxycurl_response(r, prospect_id, company_id):
+def format_proxycurl_response(r, prospect_id, company_id, research_id):
     keys = ['accomplishment_courses', 'accomplishment_honors_awards', 'accomplishment_organisations',
             'accomplishment_publications', 'accomplishment_projects', 'accomplishment_test_scores',
             'activities', 'articles', 'certifications', 'city', 'country', 'country_full_name',
@@ -60,6 +60,7 @@ def format_proxycurl_response(r, prospect_id, company_id):
         response_dataframe = pd.DataFrame(transformed_response, index=[0])
         response_dataframe['prospect_id'] = prospect_id
         response_dataframe['company_id'] = company_id
+        response_dataframe['research_id'] = research_id
         print(response_dataframe)
         response_dataframe.to_sql(f'prospect', con=engine, if_exists='append')
 

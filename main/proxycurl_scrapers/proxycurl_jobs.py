@@ -11,7 +11,7 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def run_proxycurl(job_list, company_id):
+def run_proxycurl(job_list, company_id, research_id):
     formatted_job_list = []
     job_counter = 0
     for job in job_list:
@@ -38,7 +38,7 @@ def run_proxycurl(job_list, company_id):
         print("---------------------------------------------------")
 
     pp.pprint(job_data_list)
-    completion = format_proxycurl_response(job_data_list, company_id)
+    completion = format_proxycurl_response(job_data_list, company_id, research_id)
 
     if completion is True:
         return {"Status": "Success"}
@@ -46,7 +46,7 @@ def run_proxycurl(job_list, company_id):
         return {"Status": "Failed"}
 
 
-def format_proxycurl_response(job_data_list, company_id):
+def format_proxycurl_response(job_data_list, company_id, research_id):
     keys = ['apply_url', 'employment_type', 'job_description', 'job_functions',
             'linkedin_internal_id', 'location', 'title']
     jobs_dataframe = pd.DataFrame(columns=keys)
@@ -66,6 +66,7 @@ def format_proxycurl_response(job_data_list, company_id):
             transformed_job_response = {**str_response, **reduced_response}
             temp_job_dataframe = pd.DataFrame(transformed_job_response, index=[0])
             temp_job_dataframe['company_id'] = company_id
+            temp_job_dataframe['research_id'] = research_id
             jobs_dataframe = pd.concat([jobs_dataframe, temp_job_dataframe], ignore_index=True)
 
         jobs_dataframe.to_sql(f'jobs', con=engine, if_exists='append')

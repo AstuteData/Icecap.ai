@@ -11,7 +11,7 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def url_search(company_url, company_id):
+def url_search(company_url, company_id, research_id):
     news_domains = ['businesswire.com', 'finance.yahoo.com', 'prnewswire.com', 'globenewswire.com']
     news_search_results = {}
     for news_domain in news_domains:
@@ -31,7 +31,8 @@ def url_search(company_url, company_id):
                     count += 1
                     result_dict = {'domain': result['domain'], 'link': result['link'],
                                    'snippet': result['snippet'], 'title': result['title'], 'date': result['date'],
-                                   'source': result['source'], 'company_id': company_id, 'company_url': company_url}
+                                   'source': result['source'], 'company_id': company_id, 'company_url': company_url,
+                                   'research_id': research_id}
                     result_dataframe = pd.DataFrame(result_dict, index=[0])
                     result_dataframe.to_sql(f'serpdata', con=engine, if_exists='append')
                     valueserp_dict[count] = result_dict
@@ -59,17 +60,14 @@ def url_search(company_url, company_id):
                 scraped_data['Link'] = link
                 pp.pprint(scraped_data)
                 articles_dataframe = pd.DataFrame([scraped_data])
+                articles_dataframe['company_id'] = company_id
+                articles_dataframe['research_id'] = research_id
                 print(articles_dataframe)
                 articles_dataframe.to_sql(f'articles', con=engine, if_exists='append')
                 return {'Status': 'Success'}
     except Exception as e:
         print(e)
         return {'Status': 'Failed'}
-
-
-
-
-    print("Finished... exiting.")
 
 
 def scrape(url):
