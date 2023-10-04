@@ -62,52 +62,20 @@ def run_mainframe(upload_data):
 
         else:
             print("Company and prospect do not exist.")
+            li_company_profile_url = "https://www.linkedin.com/company/rivery/"
+            li_prospect_profile_url = "https://www.linkedin.com/in/jackwhitehouse/"
+            domain = "rivery.io"
+            print("Company and prospect do not exist.")
             company_id = uuid.uuid4()
             prospect_id = uuid.uuid4()
 
-            company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_linkedin_url)
+            company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_profile_url)
             cs_status = company_scraping_complete['Status']
             search_id = company_scraping_complete['Search ID']
 
             if cs_status == 'Success':
-                articles = multiprocessing.Process(target=article_scraper.url_search, args=(domain, company_id))
-                prospect = multiprocessing.Process(target=proxycurl_prospect.run_proxycurl, args=(prospect_id, li_prospect_profile_url, company_id))
-
-                if __name__ == '__main__':
-                    articles.start()
-                    prospect.start()
-
-                    articles.join()
-                    prospect.join()
-
+                article = article_scraper.url_search(domain, company_id)
+                prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id)
                 hiring = proxycurl_hiring.run_proxycurl(company_id, search_id)
-                job_list = hiring['Job List']
-                job_scraping_complete = proxycurl_jobs.run_proxycurl(job_list, company_id)
-                if job_scraping_complete['Status'] == 'Success':
-                    print("Next part of the app.")
             else:
                 print("Something went wrong.")
-
-
-def test():
-    print("Test started")
-    li_company_profile_url = "https://www.linkedin.com/company/rivery/"
-    li_prospect_profile_url = "https://www.linkedin.com/in/jackwhitehouse/"
-    domain = "rivery.io"
-    print("Company and prospect do not exist.")
-    company_id = uuid.uuid4()
-    prospect_id = uuid.uuid4()
-
-    company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_profile_url)
-    cs_status = company_scraping_complete['Status']
-    search_id = company_scraping_complete['Search ID']
-
-    if cs_status == 'Success':
-        article = article_scraper.url_search(domain, company_id)
-        prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id)
-        hiring = proxycurl_hiring.run_proxycurl(company_id, search_id)
-    else:
-        print("Something went wrong.")
-
-
-test()
