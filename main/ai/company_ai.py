@@ -15,7 +15,7 @@ modelEngine = "text-davinci-003"
 list_of_ids = ['fdf7c99f-556e-4f11-9d33-32d33f2e04aa']
 
 
-def start_ai():
+def start_ai(list_of_ids):
     with engine.connect() as conn:
         company_select = text('SELECT * FROM "company"')
         company_data = pd.read_sql_query(company_select, conn)
@@ -97,4 +97,4 @@ def articles(matched_articles):
         article_dict[article_title] = response
 
 
-start_ai()
+start_ai(list_of_ids)
