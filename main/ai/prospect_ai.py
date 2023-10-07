@@ -14,21 +14,24 @@ openai.api_key = "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"
 modelEngine = "text-davinci-003"
 
 list_of_ids = ['fdf7c99f-556e-4f11-9d33-32d33f2e04aa']
-research_id = 1
-prospect_id = 2
-company_id = 3
 
 
-def start_ai(list_of_ids, research_id, prospect_id, company_id):
+def start_ai(list_of_ids):
     with engine.connect() as conn:
         prospect_select = text('SELECT * FROM "prospect"')
         prospect_data = pd.read_sql_query(prospect_select, conn)
         prospect_data.drop(columns='index')
 
+        company_select = text('SELECT * FROM "company"')
+        company_data = pd.read_sql_query(company_select, conn)
+        company_data.drop(columns='index')
+
     for research_id in list_of_ids:
         # Change company id to research id when implemented
         matched_prospect = prospect_data[prospect_data['research_id'] == research_id]
+        matched_company = company_data[company_data['research_id'] == research_id]
 
+        company_id = matched_company['company_id'].values[0]
         prospect_const_unchecked = {'Full name': matched_prospect['full_name'].values[0],
                                     'Prospect ID': matched_prospect['prospect_id'].values[0],
                                     'Occupation': matched_prospect['occupation'].values[0],
@@ -37,10 +40,10 @@ def start_ai(list_of_ids, research_id, prospect_id, company_id):
                                     'Experiences': matched_prospect['experiences'].values[0],
                                     'Skills': matched_prospect['skills'].values[0],
                                     'Interests': matched_prospect['interests'].values[0]}
-        prospect(prospect_const_unchecked, research_id, prospect_id, company_id)
+        prospect(prospect_const_unchecked, company_id, research_id)
 
 
-def prospect(prospect_const_unchecked, research_id, prospect_id, company_id):
+def prospect(prospect_const_unchecked, company_id, research_id):
     unwrapped_const = unwrap_const(prospect_const_unchecked)
 
     analysed_experiences = {}
@@ -74,7 +77,6 @@ def prospect(prospect_const_unchecked, research_id, prospect_id, company_id):
     prospect_data = {'Analysed Experiences': analysed_experiences_transformed,
                      'Analysed Summary': analysed_summary_transformed,
                      'Research ID': research_id,
-                     'Prospect ID': prospect_id,
                      'Company ID': company_id}
 
     prospect_analysis_df = pd.DataFrame.from_dict(prospect_data, orient='index').transpose()
@@ -137,5 +139,3 @@ def analyse(prompt):
     response = ast.literal_eval(ai_response['choices'][0]['text'])
     return response
 
-
-start_ai(list_of_ids, research_id, prospect_id, company_id)

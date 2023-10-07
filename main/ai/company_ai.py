@@ -13,6 +13,7 @@ openai.api_key = "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"
 modelEngine = "text-davinci-003"
 
 list_of_ids = ['fdf7c99f-556e-4f11-9d33-32d33f2e04aa']
+domain = 'rivery.io'
 
 
 def start_ai(list_of_ids):
@@ -30,29 +31,40 @@ def start_ai(list_of_ids):
         articles_data.drop(columns='index')
 
     for research_id in list_of_ids:
-        # Change company id to research id when implemented
         matched_company = company_data[company_data['research_id'] == research_id]
         matched_hiring = hiring_data.loc[hiring_data['research_id'] == research_id]
         matched_articles = articles_data.loc[articles_data['research_id'] == research_id]
 
-        company_name = matched_company['name'].values[0]
-        company_description = matched_company['tagline'].values[0]
+        company_name = matched_company['name']
+        company_description = matched_company['tagline']
+        company_domain = matched_company['domain']
+        company_id = matched_company['company_id']
 
-        job(matched_hiring)
-        articles(matched_articles)
+        job_response = job(matched_hiring)
+        articles_response = articles(matched_articles, domain)
+
+        jobs_response_json = json.dumps(job_response)
+        articles_response_json = json.dumps(articles_response, company_domain)
+
+        company_data = {'Company Name': company_name, 'Company Description': company_description,
+                        'Jobs Analysis': jobs_response_json, 'Articles Analysis': articles_response_json,
+                        'Research ID': research_id, 'Company ID': company_id}
+
+        company_analysis_df = pd.DataFrame.from_dict(company_data, orient='index').transpose()
+        company_analysis_df.to_sql('prospect_analysis', con=engine, if_exists='append', index=False)
 
 
 def job(matched_hiring):
     job_dict = {}
-    for job, row in matched_hiring.iterrows():
-        job_title = matched_hiring['title'].values[0]
-        job_description = matched_hiring['job_description'].values[0]
+    for index, row in matched_hiring.iterrows():
+        job_title = row['title']
+        job_description = row['job_description']
 
         prompt = (
-                    "Highlight the top 8 key requirements of the following job description. No more than 10 words for each highlighted point. "
-                    "You must not mention information about the company or the job benefits. "
-                    "Store the output in a dictionary with each key being a number and the value being the key point. "
-                    "This is the job description that you will summarise: " + job_description + "")
+                "Highlight the top 8 key requirements of the following job description. No more than 10 words for each highlighted point. "
+                "You must not mention information about the company or the job benefits. "
+                "Store the output in a dictionary with each key being a number and the value being the key point. "
+                "This is the job description that you will summarise: " + job_description + "")
 
         ai_response = openai.Completion.create(
             model=modelEngine,
@@ -71,17 +83,18 @@ def job(matched_hiring):
     return job_dict
 
 
-def articles(matched_articles):
+def articles(matched_articles, company_domain):
     article_dict = {}
-    for article, row in matched_articles.iterrows():
-        article_title = matched_articles['Article Title'].values[0]
-        article_description = matched_articles['Article Text'].values[0]
+    count = 0
+    for index, row in matched_articles.iterrows():
+        article_title = row['Article Title']
+        article_text = row['Article Text']
 
         prompt = (
-                    "Highlight the top 8 key points of the following article. No more than 10 words for each highlighted point. "
-                    "The highlights should also be contextualised to Rivery.io. "
-                    "Store the output in a dictionary with each key being a number and the value being the key point. "
-                    "This is the article that you will summarise: " + article_description + "")
+                "Highlight the top 8 key points of the following article. No more than 10 words for each highlighted point. "
+                f"The highlights should also be contextualised to {company_domain}. "
+                "Store the output in a dictionary with each key being a number and the value being the key point. "
+                "This is the article that you will summarise: " + article_text + "")
 
         ai_response = openai.Completion.create(
             model=modelEngine,
@@ -94,7 +107,10 @@ def articles(matched_articles):
         )
 
         response = ast.literal_eval(ai_response['choices'][0]['text'])
-        article_dict[article_title] = response
+        article_dict[count] = {'Article Title': article_title, 'Article Highlights': response}
+        count += 1
+
+    return article_dict
 
 
 start_ai(list_of_ids)

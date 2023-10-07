@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, text
 import uuid
-import multiprocessing
 import pandas as pd
 import sys
 
@@ -8,6 +7,7 @@ sys.path.append('../proxycurl_scrapers')
 sys.path.append('../general_scrapers')
 from main.proxycurl_scrapers import proxycurl_hiring, proxycurl_company, proxycurl_prospect, proxycurl_jobs
 from main.general_scrapers import article_scraper
+from main.ai import company_ai, prospect_ai
 
 conn = None
 cur = None
@@ -35,7 +35,8 @@ def run_mainframe(upload_data):
     prospect_linkedin_profile_header = upload_data['linkedin profile header']
     company_linkedin_url_header = upload_data['company linkedin profile header']
     csv_data = pd.DataFrame.from_dict(upload_data['csv'])
-    companies_to_research = {}
+    researched_companies = {}
+    research_ids = []
 
     for ind in csv_data.index:
         domain = (csv_data[domain_header][ind])
@@ -43,7 +44,7 @@ def run_mainframe(upload_data):
         li_company_linkedin_url = (csv_data[company_linkedin_url_header][ind])
 
         # Logic to determine if the company and prospect have been previously scraped.
-        company_already_exists = (domain in companies_to_research or domain in company_data['domain'].values)
+        company_already_exists = (domain in researched_companies or domain in company_data['domain'].values)
         prospect_already_exists = (li_prospect_linkedin_url in prospect_data['linkedin_profile'].values)
 
         if company_already_exists is True and prospect_already_exists is True:
@@ -70,37 +71,22 @@ def run_mainframe(upload_data):
             prospect_id = uuid.uuid4()
             research_id = uuid.uuid4()
 
-            company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_profile_url, research_id)
+            company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_linkedin_url, research_id)
             cs_status = company_scraping_complete['Status']
             search_id = company_scraping_complete['Search ID']
 
             if cs_status == 'Success':
                 article = article_scraper.url_search(domain, company_id, research_id)
-                prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id, research_id)
+                prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id,
+                                                            research_id)
                 hiring = proxycurl_hiring.run_proxycurl(company_id, search_id, research_id)
             else:
                 print("Something went wrong.")
 
+            research_ids.append(research_id)
 
-def test():
-    li_company_profile_url = "https://www.linkedin.com/company/rivery/"
-    li_prospect_profile_url = "https://www.linkedin.com/in/jackwhitehouse/"
-    domain = "rivery.io"
-    print("Company and prospect do not exist.")
-    company_id = uuid.uuid4()
-    prospect_id = uuid.uuid4()
-    research_id = uuid.uuid4()
+    prospect_ai.start_ai(research_ids)
+    company_ai.start_ai(research_ids)
 
-    company_scraping_complete = proxycurl_company.run_proxycurl(company_id, li_company_profile_url, research_id)
-    cs_status = company_scraping_complete['Status']
-    search_id = company_scraping_complete['Search ID']
+    return "Research complete"
 
-    if cs_status == 'Success':
-        article = article_scraper.url_search(domain, company_id, research_id)
-        prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id, research_id)
-        hiring = proxycurl_hiring.run_proxycurl(company_id, search_id, research_id)
-    else:
-        print("Something went wrong.")
-
-
-test()
