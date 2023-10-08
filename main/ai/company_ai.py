@@ -12,11 +12,8 @@ engine = create_engine('postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df
 openai.api_key = "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"
 modelEngine = "text-davinci-003"
 
-list_of_ids = ['fdf7c99f-556e-4f11-9d33-32d33f2e04aa']
-domain = 'rivery.io'
 
-
-def start_ai(list_of_ids):
+def start_ai(research_id):
     with engine.connect() as conn:
         company_select = text('SELECT * FROM "company"')
         company_data = pd.read_sql_query(company_select, conn)
@@ -30,28 +27,29 @@ def start_ai(list_of_ids):
         articles_data = pd.read_sql_query(articles_select, conn)
         articles_data.drop(columns='index')
 
-    for research_id in list_of_ids:
-        matched_company = company_data[company_data['research_id'] == research_id]
-        matched_hiring = hiring_data.loc[hiring_data['research_id'] == research_id]
-        matched_articles = articles_data.loc[articles_data['research_id'] == research_id]
+    matched_company = company_data[company_data['research_id'] == research_id]
+    matched_hiring = hiring_data.loc[hiring_data['research_id'] == research_id]
+    matched_articles = articles_data.loc[articles_data['research_id'] == research_id]
 
-        company_name = matched_company['name']
-        company_description = matched_company['tagline']
-        company_domain = matched_company['domain']
-        company_id = matched_company['company_id']
+    print(matched_company)
 
-        job_response = job(matched_hiring)
-        articles_response = articles(matched_articles, domain)
+    company_name = matched_company['name'].values[0]
+    company_description = matched_company['tagline'].values[0]
+    company_domain = matched_company['domain'].values[0]
+    company_id = matched_company['company_id'].values[0]
 
-        jobs_response_json = json.dumps(job_response)
-        articles_response_json = json.dumps(articles_response, company_domain)
+    job_response = job(matched_hiring)
+    articles_response = articles(matched_articles, company_domain)
 
-        company_data = {'Company Name': company_name, 'Company Description': company_description,
-                        'Jobs Analysis': jobs_response_json, 'Articles Analysis': articles_response_json,
-                        'Research ID': research_id, 'Company ID': company_id}
+    jobs_response_json = json.dumps(job_response)
+    articles_response_json = json.dumps(articles_response)
 
-        company_analysis_df = pd.DataFrame.from_dict(company_data, orient='index').transpose()
-        company_analysis_df.to_sql('prospect_analysis', con=engine, if_exists='append', index=False)
+    company_data = {'Company Name': company_name, 'Company Description': company_description,
+                    'Jobs Analysis': jobs_response_json, 'Articles Analysis': articles_response_json,
+                    'Research ID': research_id, 'Company ID': company_id}
+
+    company_analysis_df = pd.DataFrame.from_dict(company_data, orient='index').transpose()
+    company_analysis_df.to_sql('company_analysis', con=engine, if_exists='append', index=False)
 
 
 def job(matched_hiring):
@@ -112,5 +110,3 @@ def articles(matched_articles, company_domain):
 
     return article_dict
 
-
-start_ai(list_of_ids)

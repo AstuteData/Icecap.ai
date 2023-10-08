@@ -13,10 +13,8 @@ engine = create_engine('postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df
 openai.api_key = "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"
 modelEngine = "text-davinci-003"
 
-list_of_ids = ['fdf7c99f-556e-4f11-9d33-32d33f2e04aa']
 
-
-def start_ai(list_of_ids):
+def start_ai(research_id):
     with engine.connect() as conn:
         prospect_select = text('SELECT * FROM "prospect"')
         prospect_data = pd.read_sql_query(prospect_select, conn)
@@ -26,10 +24,11 @@ def start_ai(list_of_ids):
         company_data = pd.read_sql_query(company_select, conn)
         company_data.drop(columns='index')
 
-    for research_id in list_of_ids:
         # Change company id to research id when implemented
         matched_prospect = prospect_data[prospect_data['research_id'] == research_id]
         matched_company = company_data[company_data['research_id'] == research_id]
+
+        print(matched_prospect['full_name'].values[0])
 
         company_id = matched_company['company_id'].values[0]
         prospect_const_unchecked = {'Full name': matched_prospect['full_name'].values[0],
@@ -40,6 +39,7 @@ def start_ai(list_of_ids):
                                     'Experiences': matched_prospect['experiences'].values[0],
                                     'Skills': matched_prospect['skills'].values[0],
                                     'Interests': matched_prospect['interests'].values[0]}
+
         prospect(prospect_const_unchecked, company_id, research_id)
 
 

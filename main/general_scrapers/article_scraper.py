@@ -81,6 +81,9 @@ def scrape(url):
             title = article.title
             article_text = article.text
 
+            print(title)
+            print(article_text)
+
             refined_title = title.replace('\n', ' ')
             refined_article_text = article_text.replace('\n', ' ')
 
