@@ -49,6 +49,7 @@ def check_against_database(upload_data):
     csv_data = pd.DataFrame.from_dict(upload_data['csv'])
     researched_prospects = []
     researched_companies = []
+    print(upload_data)
     print(domain_header)
     print(prospect_linkedin_profile_header)
     print(company_linkedin_url_header)
