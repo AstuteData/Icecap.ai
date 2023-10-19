@@ -7,7 +7,7 @@ app = Flask(__name__)
 cors = CORS(app)
 
 
-@app.route('/research')
+@app.route('/research', methods=['POST'])
 def research():
     upload_data = request.get_json()
     print("Sent to worker")
