@@ -24,19 +24,24 @@ user_id = 1
 #   If not, research the prospect and save the date of the research attempt.
 
 # 4. Create login and register backend. Save user ID to database.
+try:
+    with engine.connect() as conn:
+        company = text('SELECT * FROM "company"')
+        company_data = pd.read_sql_query(company, conn)
+        company_data.drop(columns='index')
 
-with engine.connect() as conn:
-    company = text('SELECT * FROM "company"')
-    company_data = pd.read_sql_query(company, conn)
-    company_data.drop(columns='index')
-
-    prospect = text('SELECT * FROM "prospect"')
-    prospect_data = pd.read_sql_query(prospect, conn)
-    prospect_data.drop(columns='index')
+        prospect = text('SELECT * FROM "prospect"')
+        prospect_data = pd.read_sql_query(prospect, conn)
+        prospect_data.drop(columns='index')
+except Exception as e:
+    print(e)
+    print("Error in research_main.py. Could not connect to database")
+    company_data = pd.DataFrame()
+    prospect_data = pd.DataFrame()
 
 
 def check_against_database(upload_data):
-    user_id = upload_data['user id']
+    # user_id = upload_data['user id']
     domain_header = upload_data['domain header']
     prospect_linkedin_profile_header = upload_data['prospect linkedin profile header'] # Change on front end to prospect linkedin profile header
     company_linkedin_url_header = upload_data['company linkedin profile header']

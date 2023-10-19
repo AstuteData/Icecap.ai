@@ -8,5 +8,5 @@ app.conf.update(broker_url='rediss://:p10ad8c33e664c24f880e4e617de76589c86a9deb8
 
 @app.task
 def researchworker(upload_data):
-    response = research_main.format_csv(upload_data)
+    response = research_main.check_against_database(upload_data)
     return "Scraping complete"
