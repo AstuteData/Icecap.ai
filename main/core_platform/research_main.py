@@ -49,16 +49,20 @@ def check_against_database(upload_data):
     csv_data = pd.DataFrame.from_dict(upload_data['csv'])
     researched_prospects = []
     researched_companies = []
-    print(upload_data)
     print(domain_header)
     print(prospect_linkedin_profile_header)
     print(company_linkedin_url_header)
-    exit()
 
     for ind in csv_data.index:
-        domain = (csv_data[domain_header][ind])
-        li_prospect_profile_url = (csv_data[prospect_linkedin_profile_header][ind])
-        li_company_profile_url = (csv_data[company_linkedin_url_header][ind])
+        domain = csv_data[domain_header].values[ind]
+        li_prospect_profile_url = csv_data[prospect_linkedin_profile_header].values[ind]
+        li_company_profile_url = csv_data[company_linkedin_url_header].values[ind]
+
+        print(domain)
+        print(li_prospect_profile_url)
+        print(li_company_profile_url)
+
+        exit()
 
         prospect_already_researched = (li_prospect_profile_url in prospect_data['li_prospect_profile_url']
                                        or li_prospect_profile_url in researched_companies)
