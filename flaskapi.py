@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 import tasks
+import json
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -9,7 +10,8 @@ cors = CORS(app)
 @app.route('/research', methods=['POST'])
 def research():
     upload_data = request.get_json()
-    tasks.researchworker.delay(upload_data)
+    upload_data_unpacked = json.loads(upload_data)
+    tasks.researchworker.delay(upload_data_unpacked)
     return "Sent to worker"
 
 

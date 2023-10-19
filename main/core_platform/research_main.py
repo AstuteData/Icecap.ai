@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, text
 import uuid
 import pandas as pd
 import sys
+import json
 
 sys.path.append('../proxycurl_scrapers')
 sys.path.append('../general_scrapers')
