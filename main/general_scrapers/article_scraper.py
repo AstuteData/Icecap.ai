@@ -11,10 +11,12 @@ engine = create_engine(
     'eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 
 
-def url_search(company_url, company_id, research_id):
-    news_domains = ['businesswire.com', 'finance.yahoo.com', 'prnewswire.com', 'globenewswire.com']
+def url_search(company_url, company_id, research_id, user_id):
+    news_domains = ['businesswire.com', 'prnewswire.com', 'globenewswire.com']
     news_search_results = {}
     for news_domain in news_domains:
+        print('s1')
+        print(news_domain)
         try:
             params = {'api_key': '172D9AB76C6943D3ACD0BFACD1893705',
                       'q': f'site:{news_domain} "{company_url}" data',
@@ -28,14 +30,17 @@ def url_search(company_url, company_id, research_id):
             count = 0
             if valueserp_result.status_code == 200:
                 for result in r['news_results']:
+                    print(result)
                     count += 1
+                    source = result['source']
+                    source_count = "source" + str(count)
                     result_dict = {'domain': result['domain'], 'link': result['link'],
                                    'snippet': result['snippet'], 'title': result['title'], 'date': result['date'],
                                    'source': result['source'], 'company_id': company_id, 'company_url': company_url,
                                    'research_id': research_id}
                     result_dataframe = pd.DataFrame(result_dict, index=[0])
                     result_dataframe.to_sql(f'serpdata', con=engine, if_exists='append')
-                    valueserp_dict[count] = result_dict
+                    valueserp_dict[source_count] = result_dict
             else:
                 pass
             news_search_results[news_domain] = valueserp_dict
@@ -45,11 +50,13 @@ def url_search(company_url, company_id, research_id):
     pp.pprint(news_search_results)
 
     try:
+        print('s2')
         scraped_articles = {}
         for result in news_search_results:
             scraped_articles_with_origin = {}
             count = 0
             for obj in news_search_results[result]:
+                print(obj)
                 link = news_search_results[result][obj]['link']
                 source = news_search_results[result][obj]['source']
                 count += 1
@@ -62,35 +69,38 @@ def url_search(company_url, company_id, research_id):
                 articles_dataframe = pd.DataFrame([scraped_data])
                 articles_dataframe['company_id'] = company_id
                 articles_dataframe['research_id'] = research_id
+                articles_dataframe['user_id'] = user_id
                 print(articles_dataframe)
                 articles_dataframe.to_sql(f'articles', con=engine, if_exists='append')
-                return {'Status': 'Success'}
     except Exception as e:
         print(e)
         return {'Status': 'Failed'}
 
 
 def scrape(url):
+    print('s3')
     retries = 0
     while retries <= 3:
         try:
-            article = Article(url)
-            article.download()
+            username = "geonode_aeYJlDbG0k-country-GB"
+            password = "2c209d3a-1bbe-4122-a2e4-2c8a49b45489"
+            GEONODE_DNS = "premium-residential.geonode.com:9000"
+            urlToGet = url
+            proxy = {"http": "http://{}:{}@{}".format(username, password, GEONODE_DNS)}
+            r = requests.get(urlToGet, proxies=proxy)
+
+            article = Article(urlToGet)
+            article.download(input_html=r.text)
             article.parse()
-
-            title = article.title
+            article_title = article.title
             article_text = article.text
-
-            print(title)
+            print(article_title)
             print(article_text)
 
-            refined_title = title.replace('\n', ' ')
-            refined_article_text = article_text.replace('\n', ' ')
-
-            scraped_data = {'Article Title': refined_title, 'Article Text': refined_article_text}
+            scraped_data = {'Article Title': article_title, 'Article Text': article_text}
             return scraped_data
         except Exception as error:
             print(error)
             retries += 1
             if retries == 3:
-                return url
+                pass
