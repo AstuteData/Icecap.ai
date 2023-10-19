@@ -10,8 +10,8 @@ cors = CORS(app)
 @app.route('/research')
 def research():
     upload_data = request.get_json()
+    print("Sent to worker")
     tasks.researchworker.delay(upload_data)
-    return "Sent to worker"
 
 
 if __name__ == '__main__':
