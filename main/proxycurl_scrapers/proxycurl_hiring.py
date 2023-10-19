@@ -2,7 +2,11 @@ import requests
 from sqlalchemy import create_engine
 import json
 import pandas as pd
-import proxycurl_jobs
+import sys
+
+sys.path.append('../proxycurl_scrapers')
+
+from main.proxycurl_scrapers import proxycurl_jobs
 
 conn = None
 cur = None
