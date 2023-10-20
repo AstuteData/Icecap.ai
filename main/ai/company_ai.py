@@ -11,6 +11,7 @@ engine = create_engine('postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df
                        '@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 openai.api_key = "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"
 modelEngine = "text-davinci-003"
+research_id = 'a15f8596-9b59-4c5a-a118-057df9bd7e73'
 
 
 def start_ai(research_id):
@@ -35,7 +36,10 @@ def start_ai(research_id):
         matched_hiring = hiring_data.loc[hiring_data['research_id'] == str_research_id]
         matched_articles = articles_data.loc[articles_data['research_id'] == str_research_id]
 
-        print(matched_company)
+        company_domain = 'paddle.com'
+        print(matched_articles)
+        articles_response = articles(matched_articles, company_domain)
+        exit()
 
         company_name = matched_company['name'].values[0]
         company_description = matched_company['tagline'].values[0]
@@ -101,14 +105,14 @@ def articles(matched_articles, company_domain):
             prompt = (
                     "Highlight the top 8 key points of the following article. No more than 10 words for each highlighted point. "
                     f"The highlights should also be contextualised to {company_domain}."
-                    "Store the output in a dictionary with each key being a number and the value being the key point. Do not assign the dictionary to a variable or add text outside of the dictionary. You must always close the dictionary with a closing bracket."
+                    "Store the output in a dictionary with each key being a number and the value being the key point. Do not assign the dictionary to a variable or add text outside of the dictionary. Make sure the key has quotation marks around it. You must always close the dictionary with a closing bracket"
                     "This is the article that you will summarise: " + article_text + "")
 
             ai_response = openai.Completion.create(
                 model=modelEngine,
                 prompt=prompt,
                 temperature=0.2,
-                max_tokens=200,
+                max_tokens=300,
                 top_p=1,
                 frequency_penalty=0.0,
                 presence_penalty=0.5,
@@ -120,6 +124,9 @@ def articles(matched_articles, company_domain):
             count += 1
         except Exception as e:
             print(e)
+            pass
 
-        return article_dict
+    return article_dict
 
+
+start_ai(research_id)
