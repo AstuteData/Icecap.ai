@@ -63,7 +63,7 @@ def prospect(prospect_const_unchecked, company_id, research_id):
             prompt = (
                     "Your job is to analyse the following job data from a LinkedIn profile and summarise it into key points no longer than 6 words."
                     "The key points will be used in prospecting to build a relationship with the prospect."
-                    "Your response must be a Python dictionary with each key being a number and the value being the key point. You must always close the dictionary with a closing bracket."
+                    "Your response must be a Python dictionary with each key being a number and the value being the key point. You must always close the dictionary with a closing bracket. Do not assign the dictionary to a variable or add text outside of the dictionary"
                     ""
                     "This is the job data that you will summarise: " + str + "")
             analysis = analyse(prompt)
@@ -73,7 +73,7 @@ def prospect(prospect_const_unchecked, company_id, research_id):
     summary_prompt = (
             f"Your job is to analyse the following Linkedin data from a LinkedIn profile and summarise it into key points no longer than 6 words."
             "The key points will be used in prospecting to build a relationship with the prospect."
-            "Your response must be a Python dictionary with each key being a number and the value being the key point. You must always close the dictionary with a closing bracket."
+            "Your response must be a Python dictionary with each key being a number and the value being the key point. You must always close the dictionary with a closing bracket. Do not assign the dictionary to a variable or add text outside of the dictionary"
             ""
             "This is the Linkedin data that you will summarise: " + unwrapped_const['Summary'] + "")
 
