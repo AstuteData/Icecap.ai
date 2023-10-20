@@ -39,6 +39,7 @@ except Exception as e:
     print("Error in research_main.py. Could not connect to database")
     company_data = pd.DataFrame()
     prospect_data = pd.DataFrame()
+    prospect_data['li_prospect_profile_url'] = None
 
 
 def check_against_database(upload_data):
@@ -63,7 +64,7 @@ def check_against_database(upload_data):
         print(li_company_profile_url)
 
         prospect_already_researched = (li_prospect_profile_url in prospect_data['li_prospect_profile_url']
-                                       or li_prospect_profile_url in researched_companies)
+                                       or li_prospect_profile_url in researched_prospects)
         company_already_researched = (company_data[company_data['domain'] == domain]
                                       or domain in researched_companies)
 
