@@ -11,7 +11,6 @@ engine = create_engine('postgresql://xpdmcctztuueoj:5c6b0ce73d0e1d7a8b7ea13688df
                        '@ec2-34-241-82-91.eu-west-1.compute.amazonaws.com:5432/d6i1k6lrk3j39n')
 openai.api_key = "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"
 modelEngine = "text-davinci-003"
-research_id = 'a15f8596-9b59-4c5a-a118-057df9bd7e73'
 
 
 def start_ai(research_id):
@@ -35,11 +34,6 @@ def start_ai(research_id):
         matched_company = company_data[company_data['research_id'] == str_research_id]
         matched_hiring = hiring_data.loc[hiring_data['research_id'] == str_research_id]
         matched_articles = articles_data.loc[articles_data['research_id'] == str_research_id]
-
-        company_domain = 'paddle.com'
-        print(matched_articles)
-        articles_response = articles(matched_articles, company_domain)
-        exit()
 
         company_name = matched_company['name'].values[0]
         company_description = matched_company['tagline'].values[0]
@@ -127,6 +121,3 @@ def articles(matched_articles, company_domain):
             pass
 
     return article_dict
-
-
-start_ai(research_id)
