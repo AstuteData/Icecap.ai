@@ -63,10 +63,13 @@ def check_against_database(upload_data):
         print(li_prospect_profile_url)
         print(li_company_profile_url)
 
-        prospect_already_researched = (li_prospect_profile_url in prospect_data['li_prospect_profile_url']
-                                       or li_prospect_profile_url in researched_prospects)
-        company_already_researched = (company_data[company_data['domain'] == domain]
-                                      or domain in researched_companies)
+        # prospect_already_researched = (li_prospect_profile_url in prospect_data['li_prospect_profile_url']
+                                       #or li_prospect_profile_url in researched_prospects)
+        #company_already_researched = (company_data[company_data['domain'] == domain]
+                                      #or domain in researched_companies)
+
+        prospect_already_researched = False
+        company_already_researched = False
 
         research_r = research(li_prospect_profile_url, li_company_profile_url, domain,
                  prospect_already_researched, company_already_researched, user_id)
