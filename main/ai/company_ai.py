@@ -27,6 +27,9 @@ def start_ai(research_id):
         articles_data = pd.read_sql_query(articles_select, conn)
         articles_data.drop(columns='index')
 
+    print('matched')
+    print(research_id)
+
     matched_company = company_data[company_data['research_id'] == research_id]
     matched_hiring = hiring_data.loc[hiring_data['research_id'] == research_id]
     matched_articles = articles_data.loc[articles_data['research_id'] == research_id]

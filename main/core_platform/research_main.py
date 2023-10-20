@@ -103,12 +103,16 @@ def research(li_prospect_profile_url, li_company_profile_url, domain,
         if cs_status == 'Success':
             attempts = 0
             while attempts < 3:
+                print(attempts)
                 try:
                     article = article_scraper.url_search(domain, company_id, research_id, user_id)
                     prospect = proxycurl_prospect.run_proxycurl(prospect_id, li_prospect_profile_url, company_id, research_id, user_id)
                     hiring = proxycurl_hiring.run_proxycurl(company_id, search_id, research_id, user_id)
 
+
+                    print('starting prospect ai')
                     prospect_ai.start_ai(research_id)
+                    print('starting company ai')
                     company_ai.start_ai(research_id)
                     break
                 except Exception as error:

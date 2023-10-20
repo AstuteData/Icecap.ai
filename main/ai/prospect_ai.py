@@ -24,23 +24,29 @@ def start_ai(research_id):
         company_data = pd.read_sql_query(company_select, conn)
         company_data.drop(columns='index')
 
-        # Change company id to research id when implemented
-        matched_prospect = prospect_data[prospect_data['research_id'] == research_id]
-        matched_company = company_data[company_data['research_id'] == research_id]
+        try:
+            # Change company id to research id when implemented
+            matched_prospect = prospect_data[prospect_data['research_id'] == research_id]
+            matched_company = company_data[company_data['research_id'] == research_id]
 
-        print(matched_prospect['full_name'].values[0])
+            print(matched_prospect['full_name'].values[0])
 
-        company_id = matched_company['company_id'].values[0]
-        prospect_const_unchecked = {'Full name': matched_prospect['full_name'].values[0],
-                                    'Prospect ID': matched_prospect['prospect_id'].values[0],
-                                    'Occupation': matched_prospect['occupation'].values[0],
-                                    'Headline': matched_prospect['headline'].values[0],
-                                    'Summary': matched_prospect['summary'].values[0],
-                                    'Experiences': matched_prospect['experiences'].values[0],
-                                    'Skills': matched_prospect['skills'].values[0],
-                                    'Interests': matched_prospect['interests'].values[0]}
+            company_id = matched_company['company_id'].values[0]
+            prospect_const_unchecked = {'Full name': matched_prospect['full_name'].values[0],
+                                        'Prospect ID': matched_prospect['prospect_id'].values[0],
+                                        'Occupation': matched_prospect['occupation'].values[0],
+                                        'Headline': matched_prospect['headline'].values[0],
+                                        'Summary': matched_prospect['summary'].values[0],
+                                        'Experiences': matched_prospect['experiences'].values[0],
+                                        'Skills': matched_prospect['skills'].values[0],
+                                        'Interests': matched_prospect['interests'].values[0]}
+        except Exception as e:
+            print(e)
+            print('Error in Prospect AI occurred')
+            exit()
 
         prospect(prospect_const_unchecked, company_id, research_id)
+        return 'Complete'
 
 
 def prospect(prospect_const_unchecked, company_id, research_id):
@@ -82,6 +88,7 @@ def prospect(prospect_const_unchecked, company_id, research_id):
     prospect_analysis_df = pd.DataFrame.from_dict(prospect_data, orient='index').transpose()
     print(prospect_analysis_df)
     prospect_analysis_df.to_sql('prospect_analysis', con=engine, if_exists='append', index=False)
+    return 'Complete'
 
 
 def unwrap_const(prospect_const):
