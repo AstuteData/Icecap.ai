@@ -70,7 +70,7 @@ def job(matched_hiring):
         prompt = (
                 "Highlight the top 8 key requirements of the following job description. No more than 10 words for each highlighted point. "
                 "You must not mention information about the company or the job benefits. "
-                "Store the output in a dictionary with each key being a number and the value being the key point. Do not assign the dictionary to a variable or add text outside of the dictionary. Always close the dictionary bracket "
+                "Store the output in a dictionary with each key being a number and the value being the key point. Do not assign the dictionary to a variable or add text outside of the dictionary. You must always close the dictionary with a closing bracket "
                 "This is the job description that you will summarise: " + job_description + "")
 
         ai_response = openai.Completion.create(
@@ -101,7 +101,7 @@ def articles(matched_articles, company_domain):
             prompt = (
                     "Highlight the top 8 key points of the following article. No more than 10 words for each highlighted point. "
                     f"The highlights should also be contextualised to {company_domain}."
-                    "Store the output in a dictionary with each key being a number and the value being the key point. Do not assign the dictionary to a variable or add text outside of the dictionary. Always close the dictionary bracket."
+                    "Store the output in a dictionary with each key being a number and the value being the key point. Do not assign the dictionary to a variable or add text outside of the dictionary. You must always close the dictionary with a closing bracket."
                     "This is the article that you will summarise: " + article_text + "")
 
             ai_response = openai.Completion.create(
