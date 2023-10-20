@@ -24,10 +24,11 @@ def start_ai(research_id):
         company_data = pd.read_sql_query(company_select, conn)
         company_data.drop(columns='index')
 
+        str_research_id = str(research_id)
         try:
             # Change company id to research id when implemented
-            matched_prospect = prospect_data[prospect_data['research_id'] == research_id]
-            matched_company = company_data[company_data['research_id'] == research_id]
+            matched_prospect = prospect_data[prospect_data['research_id'] == str_research_id]
+            matched_company = company_data[company_data['research_id'] == str_research_id]
 
             print(matched_prospect['full_name'].values[0])
 

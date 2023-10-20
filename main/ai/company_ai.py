@@ -30,9 +30,10 @@ def start_ai(research_id):
     print('matched')
     print(research_id)
 
-    matched_company = company_data[company_data['research_id'] == research_id]
-    matched_hiring = hiring_data.loc[hiring_data['research_id'] == research_id]
-    matched_articles = articles_data.loc[articles_data['research_id'] == research_id]
+    str_research_id = str(research_id)
+    matched_company = company_data[company_data['research_id'] == str_research_id]
+    matched_hiring = hiring_data.loc[hiring_data['research_id'] == str_research_id]
+    matched_articles = articles_data.loc[articles_data['research_id'] == str_research_id]
 
     print(matched_company)
 
