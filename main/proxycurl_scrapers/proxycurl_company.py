@@ -37,7 +37,6 @@ def run_proxycurl(company_id, li_company_profile_url, research_id, user_id):
     if general_company_completion['Status'] == 'Success':
         general_cc_data = general_company_completion['Data']
         proxycurl_company_completion = format_proxycurl_response(r, general_cc_data, company_id, research_id, user_id)
-        print(proxycurl_company_completion)
         proxycurl_status = proxycurl_company_completion
     else:
         print("-------------------------------------")
@@ -81,7 +80,6 @@ def format_proxycurl_response(r, general_company_completion, company_id, researc
     response_dataframe = pd.DataFrame(transformed_response, index=[0])
     response_dataframe['research_id'] = research_id
     response_dataframe['user_id'] = user_id
-    print(response_dataframe)
     response_dataframe.to_sql(f'company', con=engine, if_exists='append')
 
     return {'Status': 'Success', 'Data': str_response['search_id']}

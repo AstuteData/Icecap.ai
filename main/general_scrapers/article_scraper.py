@@ -15,8 +15,6 @@ def url_search(company_url, company_id, research_id, user_id):
     news_domains = ['businesswire.com', 'prnewswire.com', 'globenewswire.com']
     news_search_results = {}
     for news_domain in news_domains:
-        print('s1')
-        print(news_domain)
         try:
             params = {'api_key': '172D9AB76C6943D3ACD0BFACD1893705',
                       'q': f'site:{news_domain} "{company_url}" data',
@@ -30,7 +28,6 @@ def url_search(company_url, company_id, research_id, user_id):
             count = 0
             if valueserp_result.status_code == 200:
                 for result in r['news_results']:
-                    print(result)
                     count += 1
                     source = result['source']
                     source_count = "source" + str(count)
@@ -47,30 +44,24 @@ def url_search(company_url, company_id, research_id, user_id):
         except Exception as e:
             print(e)
             continue
-    pp.pprint(news_search_results)
 
     try:
-        print('s2')
         scraped_articles = {}
         for result in news_search_results:
             scraped_articles_with_origin = {}
             count = 0
             for obj in news_search_results[result]:
-                print(obj)
                 link = news_search_results[result][obj]['link']
                 source = news_search_results[result][obj]['source']
                 count += 1
                 url = news_search_results[result][obj]['link']
-                print(url)
                 scraped_data = scrape(url)
                 scraped_data['Source'] = source
                 scraped_data['Link'] = link
-                pp.pprint(scraped_data)
                 articles_dataframe = pd.DataFrame([scraped_data])
                 articles_dataframe['company_id'] = company_id
                 articles_dataframe['research_id'] = research_id
                 articles_dataframe['user_id'] = user_id
-                print(articles_dataframe)
                 articles_dataframe.to_sql(f'articles', con=engine, if_exists='append')
     except Exception as e:
         print(e)
@@ -78,7 +69,6 @@ def url_search(company_url, company_id, research_id, user_id):
 
 
 def scrape(url):
-    print('s3')
     retries = 0
     while retries <= 3:
         try:
@@ -94,8 +84,6 @@ def scrape(url):
             article.parse()
             article_title = article.title
             article_text = article.text
-            print(article_title)
-            print(article_text)
 
             scraped_data = {'Article Title': article_title, 'Article Text': article_text}
             return scraped_data

@@ -77,7 +77,6 @@ def format_proxycurl_response(r, company_id, research_id, user_id):
     response_dataframe['company_id'] = company_id
     response_dataframe['research_id'] = research_id
     response_dataframe['user_id'] = user_id
-    print(response_dataframe)
     response_dataframe.to_sql(f'hiring', con=engine, if_exists='append')
 
     return {'Status': 'Success', 'Data': formatted_response}
