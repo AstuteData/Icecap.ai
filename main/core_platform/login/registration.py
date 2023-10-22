@@ -33,7 +33,7 @@ def register(registration_data):
         for index, row in user_data.iterrows():
             count = count + 1
             if email_formatted == row['email']:
-                print(row['email'])
+                print('email already registered')
                 return {'Status': 'Email already registered', 'User ID': 'None'}
             else:
                 if count == user_data_len:

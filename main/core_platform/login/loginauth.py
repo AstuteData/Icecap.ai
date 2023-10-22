@@ -21,20 +21,23 @@ def login(login_data):
 
     email = login_data['EmailAddress']
     email_formatted = email.lower()
-    password = login_data['password']
+    password = login_data['Password']
     user_data_len = len(user_data)
 
     try:
         count = 0
-        for row, index in user_data.iterrows():
+        for index, row in user_data.iterrows():
             count = count + 1
-            if email_formatted == index['email']:
-                if password == index['password']:
-                    return {'Status': 'Successful login', 'User ID': index['user_id']}
+            if email_formatted == row['email']:
+                if password == row['password']:
+                    print('Successful login')
+                    return {'Status': 'Successful login', 'User ID': row['user_id']}
                 else:
+                    print('Incorrect password')
                     return {'Status': 'Incorrect password', 'User ID': 'None'}
             else:
                 if count == user_data_len:
+                    print('Account does not exist')
                     return {'Status': 'Account does not exist', 'User ID': 'None'}
                 else:
                     pass
