@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tasks
+from main.core_platform.login import loginauth, registration
 import json
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ cors = CORS(app)
 def login():
     login_data = request.get_json()
     print("Sent to worker")
-    response = tasks.loginworker.delay(login_data)
+    response = loginauth.login(login_data)
     return jsonify(response)
 
 
@@ -19,7 +20,7 @@ def login():
 def register():
     registration_data = request.get_json()
     print("Sent to worker")
-    response = tasks.registrationworker.delay(registration_data)
+    response = registration.register(registration_data)
     print('flask')
     print(response)
     return jsonify(response)
@@ -30,7 +31,6 @@ def research():
     upload_data = request.get_json()
     print("Sent to worker")
     response = tasks.researchworker.delay(upload_data)
-    return jsonify(response)
 
 
 if __name__ == '__main__':
