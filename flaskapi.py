@@ -7,6 +7,20 @@ app = Flask(__name__)
 cors = CORS(app)
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    login_data = request.get_json()
+    print("Sent to worker")
+    tasks.loginworker.delay(login_data)
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    registration_data = request.get_json()
+    print("Sent to worker")
+    tasks.registerworker.delay(registration_data)
+
+
 @app.route('/research', methods=['POST'])
 def research():
     upload_data = request.get_json()
