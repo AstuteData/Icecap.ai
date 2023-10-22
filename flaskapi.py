@@ -8,7 +8,7 @@ app = Flask(__name__)
 cors = CORS(app)
 
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
     login_data = request.get_json()
     print("Sent to worker")
