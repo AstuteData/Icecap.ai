@@ -48,7 +48,7 @@ def register(registration_data):
                     new_user_data['user_id'] = [user_id]
                     new_user_data.to_sql(f'user', con=engine, if_exists='append')
                     print('saved')
-                    return {'Status': 'Successful registration', 'User ID': user_id}
+                    return {'Status': 'Successful registration', 'User ID': str(user_id)}
                 elif count < user_data_len:
                     pass
     except Exception as e:
