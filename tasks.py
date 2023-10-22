@@ -20,6 +20,6 @@ def loginworker(login_data):
 
 
 @app.task
-def registerworker(registration_data):
+def registrationworker(registration_data):
     response = registration.register(registration_data)
     return "Registration complete"

@@ -18,7 +18,7 @@ def login():
 def register():
     registration_data = request.get_json()
     print("Sent to worker")
-    tasks.registerworker.delay(registration_data)
+    tasks.registrationworker.delay(registration_data)
 
 
 @app.route('/research', methods=['POST'])

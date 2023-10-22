@@ -11,9 +11,10 @@ engine = create_engine(
 
 def login(login_data):
     try:
-        user = text('SELECT * FROM "user"')
-        user_data = pd.read_sql_query(user, conn)
-        user_data.drop(columns='index')
+        with engine.connect() as conn:
+            user = text('SELECT * FROM "user"')
+            user_data = pd.read_sql_query(user, conn)
+            user_data.drop(columns='index')
     except Exception as e:
         print(e)
         user_data = pd.DataFrame()
