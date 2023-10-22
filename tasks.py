@@ -22,4 +22,5 @@ def loginworker(login_data):
 @app.task
 def registrationworker(registration_data):
     response = registration.register(registration_data)
+    print(response)
     return response
