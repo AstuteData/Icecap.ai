@@ -7,14 +7,15 @@ app = Flask(__name__)
 cors = CORS(app)
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     login_data = request.get_json()
     print("Sent to worker")
-    tasks.loginworker.delay(login_data)
+    response = tasks.loginworker.delay(login_data)
+    return jsonify(response)
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     registration_data = request.get_json()
     print("Sent to worker")
@@ -22,7 +23,7 @@ def register():
     return jsonify(response)
 
 
-@app.route('/research', methods=['POST'])
+@app.route('/research', methods=['GET', 'POST'])
 def research():
     upload_data = request.get_json()
     print("Sent to worker")
