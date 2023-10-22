@@ -16,10 +16,10 @@ def researchworker(upload_data):
 @app.task
 def loginworker(login_data):
     response = loginauth.login(login_data)
-    return "Login complete"
+    return response
 
 
 @app.task
 def registrationworker(registration_data):
     response = registration.register(registration_data)
-    return "Registration complete"
+    return response

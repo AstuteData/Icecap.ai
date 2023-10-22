@@ -18,14 +18,15 @@ def login():
 def register():
     registration_data = request.get_json()
     print("Sent to worker")
-    tasks.registrationworker.delay(registration_data)
-
+    response = tasks.registrationworker.delay(registration_data)
+    return response
 
 @app.route('/research', methods=['POST'])
 def research():
     upload_data = request.get_json()
     print("Sent to worker")
-    tasks.researchworker.delay(upload_data)
+    response = tasks.researchworker.delay(upload_data)
+    return response
 
 
 if __name__ == '__main__':
