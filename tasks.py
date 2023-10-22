@@ -23,4 +23,5 @@ def loginworker(login_data):
 def registrationworker(registration_data):
     response = registration.register(registration_data)
     print(response)
-    return response
+    registration_response = response.get()
+    return registration_response
