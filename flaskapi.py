@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tasks
 import json
@@ -19,14 +19,15 @@ def register():
     registration_data = request.get_json()
     print("Sent to worker")
     response = tasks.registrationworker.delay(registration_data)
-    return response
+    return jsonify(response)
+
 
 @app.route('/research', methods=['POST'])
 def research():
     upload_data = request.get_json()
     print("Sent to worker")
     response = tasks.researchworker.delay(upload_data)
-    return response
+    return jsonify(response)
 
 
 if __name__ == '__main__':
