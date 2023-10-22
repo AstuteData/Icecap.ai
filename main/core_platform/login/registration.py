@@ -21,19 +21,23 @@ def register(registration_data):
         print(e)
         user_data = pd.DataFrame()
     user_data_len = len(user_data)
+    print(user_data)
+    print(user_data_len)
 
     email = registration_data['EmailAddress']
     email_formatted = email.lower()
     password = registration_data['Password']
 
+    count = 0
     try:
-        count = -1
-        for row, index in user_data.iterrows():
+        for index, row in user_data.iterrows():
             count = count + 1
-            if email_formatted == index['email']:
+            if email_formatted == row['email']:
+                print(row['email'])
                 return {'Status': 'Email already registered', 'User ID': 'None'}
             else:
                 if count == user_data_len:
+                    print('saving')
                     user_id = uuid.uuid4()
                     new_user_data = pd.DataFrame()
                     new_user_data['company_name'] = [registration_data['CompanyName']]
@@ -42,8 +46,8 @@ def register(registration_data):
                     new_user_data['email'] = [email_formatted]
                     new_user_data['password'] = [password]
                     new_user_data['user_id'] = [user_id]
-
                     new_user_data.to_sql(f'user', con=engine, if_exists='append')
+                    print('saved')
                     return {'Status': 'Successful registration', 'User ID': user_id}
                 elif count < user_data_len:
                     pass
@@ -54,6 +58,7 @@ def register(registration_data):
 
 def registration_table():
     new_user_data = pd.DataFrame()
+    new_user_data['company_name'] = ['Test Company']
     new_user_data['first_name'] = ['Terry']
     new_user_data['last_name'] = ['Tester']
     new_user_data['email'] = ['terry@tester.com']
@@ -61,3 +66,4 @@ def registration_table():
     new_user_data['user_id'] = ['1']
     print(new_user_data)
     new_user_data.to_sql(f'user', con=engine, if_exists='append')
+

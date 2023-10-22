@@ -25,7 +25,7 @@ def login(login_data):
     user_data_len = len(user_data)
 
     try:
-        count = -1
+        count = 0
         for row, index in user_data.iterrows():
             count = count + 1
             if email_formatted == index['email']:
