@@ -28,6 +28,8 @@ def research():
     upload_data = request.get_json()
     print("Sent to worker")
     response = tasks.researchworker.delay(upload_data)
+    print('flask')
+    print(response)
     return jsonify(response)
 
 
