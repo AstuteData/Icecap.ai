@@ -20,10 +20,12 @@ def return_research_list():
         print(e)
 
     researched_company_list = {}
+    count = 0
     for index, row in company_data.iterrows():
+        count = count + 1
         company_name = row['name']
         company_id = row['company_id']
-        researched_company_list[company_name] = {'Company Name': company_name,
-                                                 'Company ID': company_id}
+        researched_company_list[count] = {'CompanyName': company_name,
+                                          'CompanyID': company_id}
 
     return json.dumps(researched_company_list)
