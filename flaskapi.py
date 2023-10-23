@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tasks
 from main.core_platform.login import loginauth, registration
+from main.return_data import return_researched_companies
 import json
 
 app = Flask(__name__)
@@ -31,6 +32,12 @@ def research():
     upload_data = request.get_json()
     print("Sent to worker")
     response = tasks.researchworker.delay(upload_data)
+
+
+@app.route('/getresearch', methods=['GET'])
+def getresearch():
+    response = return_researched_companies.return_research_list()
+    return response
 
 
 if __name__ == '__main__':
